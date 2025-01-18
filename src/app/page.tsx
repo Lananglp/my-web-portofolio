@@ -1,5 +1,4 @@
 'use client'
-import Header from "@/components/Header"
 import { UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,7 +28,6 @@ export default function Home() {
 
   return (
     <div>
-      {/* <Header /> */}
       <div className="flex items-center space-x-4 p-4">
         <label className="flex items-center space-x-2">
           <input
