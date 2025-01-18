@@ -1,4 +1,6 @@
 'use client'
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,16 +13,17 @@ export default function Home() {
   const birthYear = 2003;
   const age = currentYear - birthYear;
 
-  const [theme, setTheme] = useState<string>('light');
+  const [theme, setTheme] = useState<string>('dark');
 
   useEffect(() => {
-    // Get theme from localStorage or fallback to light
-    const storedTheme = localStorage.getItem('theme') || 'light';
+    // Ambil tema dari localStorage atau fallback ke 'dark'
+    const storedTheme = localStorage.getItem('theme') || 'dark';
     setTheme(storedTheme);
     document.documentElement.classList.toggle('dark', storedTheme === 'dark');
   }, []);
 
-  const handleThemeChange = (selectedTheme: string) => {
+  const handleThemeChange = (isDark: boolean) => {
+    const selectedTheme = isDark ? 'dark' : 'light';
     setTheme(selectedTheme);
     localStorage.setItem('theme', selectedTheme);
     document.documentElement.classList.toggle('dark', selectedTheme === 'dark');
@@ -28,71 +31,53 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex items-center space-x-4 p-4">
-        <label className="flex items-center space-x-2">
-          <input
-            type="radio"
-            name="theme"
-            value="light"
-            checked={theme === 'light'}
-            onChange={() => handleThemeChange('light')}
-            className="form-radio text-blue-500"
-          />
-          <span className="text-gray-800 dark:text-gray-200">Light Mode</span>
-        </label>
-        <label className="flex items-center space-x-2">
-          <input
-            type="radio"
-            name="theme"
-            value="dark"
-            checked={theme === 'dark'}
-            onChange={() => handleThemeChange('dark')}
-            className="form-radio text-blue-500"
-          />
-          <span className="text-gray-800 dark:text-gray-200">Dark Mode</span>
-        </label>
-      </div>
       <div className=" container mx-auto max-w-6xl px-4 py-24">
         <div className="flex flex-row gap-4">
           <div className="basis-[32rem]">
-            <div className="sticky top-24 bg-zinc-100 dark:bg-zinc-800 rounded-xl dark:shadow-lg dark:shadow-black/25 p-6">
-              <div className="flex items-center gap-1.5 mb-4">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                <div className="w-3 h-3 rounded-full bg-green-500" />
+            <div className="sticky top-24">
+              <div className="bg-zinc-100 dark:bg-zinc-800 rounded-xl dark:shadow-lg dark:shadow-black/25 p-6">
+                <div className="flex items-center gap-1.5 mb-4">
+                  <div className="w-3 h-3 rounded-full bg-red-500" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                </div>
+                <div className="mx-auto relative bg-zinc-200 dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-32 h-32">
+                  <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12" />
+                </div>
+                <h1 className="mt-4 dark:text-white text-lg text-center">Kadek Lanang Lanusa Putera</h1>
+                <p className="mb-8 text-sm text-center text-zinc-500 dark:text-zinc-300">lananglanusaputera@gmail.com</p>
+                <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-700 dark:text-white font-semibold dark:font-normal">Social Media</h6>
+                <ul className="flex flex-col gap-2">
+                  <li>
+                    <Link href="/about" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
+                      <FaGithub className="inline text-2xl mb-0.5 me-2" />
+                      Lananglp
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="https://www.linkedin.com/in/lanang-lanusa-putera-70b6422a8/" target="_blank" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
+                      <FaLinkedin className="inline text-2xl mb-0.5 me-2" />
+                      Lanang Lanusa Putera
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/about" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
+                      <FaInstagram className="inline text-2xl mb-0.5 me-2" />
+                      lananglanusa_
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/about" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
+                      <FaTelegram className="inline text-2xl mb-0.5 me-2" />
+                      Lanang Lanusa
+                    </Link>
+                  </li>
+                </ul>
               </div>
-              <div className="mx-auto relative bg-zinc-200 dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-32 h-32">
-                <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12" />
+              <div className="flex items-center">
+                <Switch id="toggle-dark-mode" checked={theme === 'dark'} onCheckedChange={(checked) => handleThemeChange(checked)} className="m-3" />
+                <Label htmlFor="toggle-dark-mode">{ theme === 'dark' ? "Dark Mode" : "Light Mode" }</Label>
               </div>
-              <h1 className="mt-4 dark:text-white text-lg text-center">Kadek Lanang Lanusa Putera</h1>
-              <p className="mb-8 text-sm text-center text-zinc-500 dark:text-zinc-300">lananglanusaputera@gmail.com</p>
-              <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-700 dark:text-white font-semibold dark:font-normal">Social Media</h6>
-              <ul className="flex flex-col gap-2">
-                <li>
-                  <Link href="/about" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
-                    <FaGithub className="inline text-2xl mb-0.5 me-2" />
-                    Lananglp
-                  </Link>
-                </li>
-                <li>
-                  <Link href="https://www.linkedin.com/in/lanang-lanusa-putera-70b6422a8/" target="_blank" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
-                    <FaLinkedin className="inline text-2xl mb-0.5 me-2" />
-                    Lanang Lanusa Putera
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
-                    <FaInstagram className="inline text-2xl mb-0.5 me-2" />
-                    lananglanusa_
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
-                    <FaTelegram className="inline text-2xl mb-0.5 me-2" />
-                    Lanang Lanusa
-                  </Link>
-                </li>
-              </ul>
             </div>
           </div>
           <div className="basis-full bg-zinc-100 dark:bg-zinc-800 rounded-xl shadow-lg shadow-black/25 p-6">
