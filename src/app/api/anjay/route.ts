@@ -5,8 +5,7 @@ import path from 'path';
 import pdfParse from 'pdf-parse';
 
 const openai = new OpenAI({
-  apiKey: "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", // Pastikan API key ada di .env.local
-  // apiKey: process.env.OPENAI_API_KEY!, // Pastikan API key ada di .env.local
+  apiKey: process.env.OPENAI_API_KEY!, // Pastikan API key ada di .env.local
 });
 
 // Fungsi untuk membaca dan memparsing PDF
