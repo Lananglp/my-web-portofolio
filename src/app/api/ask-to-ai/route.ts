@@ -5,33 +5,44 @@ export async function POST(req: Request) {
   try {
 
     const aboutMe = `
-        Nama Lengkap: Kadek Lanang Lanusa Putera
-        Nama Panggilan: Lanang
-        Email: lananglanusaputera@gmail.com
-        No Hp: 085737578780
-        LinkedIn: Lanang Lanusa Putera
-        Github: Lananglp
-        Instagram: @lananglanusa_
-        Facebook: Kadek Lanang
-        status hubungan: Single
-        tanggal lahir: 7 April 2003
-        umur: [tahun sekarang - tahun lahir]
-        Alamat saat ini: Jl. Hayam Wuruk No.186, Sumerta Kelod, Kec. Denpasar Tim., Kota Denpasar, Bali 80239
-        Ringkasan: Saya adalah lulusan Informatika yang antusias dalam mengembangkan perangkat lunak berkualitas. Memiliki pemahaman yang solid tentang HTML, CSS, JavaScript, TypeScript, Laravel, React.js, Next.js, dan Vite.js. Terampil dalam pengembangan Frontend Developer, saya berorientasi pada detail dan nyaman bekerja dalam tim untuk mencapai hasil terbaik.
-        Pengalaman:
-        •	[IT Programmer] (Alfa Prima Sejahtera) | [Perusahaan] | [Denpasar] | [20 September 2023]
-        o	mengembangkan desain UI baru pada website, membuat website manajemen pegawai, mengoptimasi kinerja database
-        •	Proyek | Rekan Kamu | 1 Tahun
-        o	membangun aplikasi web untuk mengelola manajemen pegawai, keuangan, absensi di dalam sebuah perusahaan
-        Pendidikan:
-        •	Manajemen Informatika dan Komputer di kampus Alfa Prima dan lulus pada tahun 2023
-        Keterampilan Teknis:
+        Nama Lengkap      : Kadek Lanang Lanusa Putera
+        Nama Panggilan    : Lanang
+        Email             : lananglanusaputera@gmail.com
+        No Hp             : 085737578780
+        LinkedIn          : Lanang Lanusa Putera
+        Github            : Lananglp
+        Instagram         : @lananglanusa_
+        Facebook          : Kadek Lanang
+        status hubungan   : Single
+        tanggal lahir     : 7 April 2003
+        umur              : [tahun sekarang - tahun lahir]
+        agama             : Hindu
+        Alamat asli saya  : Br.Gulingan, Desa Antosari, Kec. Selemadeg Barat, Tabanan, Bali
+        Alamat saat ini   : Jl. Hayam Wuruk No.186, Sumerta Kelod, Kec. Denpasar Tim., Kota Denpasar, Bali 80239
+        Ringkasan         : Saya adalah lulusan Informatika yang antusias dalam mengembangkan perangkat lunak berkualitas. Memiliki pemahaman yang solid tentang HTML, CSS, JavaScript, TypeScript, Laravel, React.js, Next.js, dan Vite.js. Terampil dalam pengembangan Frontend Developer, saya berorientasi pada detail dan nyaman bekerja dalam tim untuk mencapai hasil terbaik.
+        Pengalaman        : Pernah bekerja di PT.Alfa Prima Sejahtera sebagai IT Programmer sejak 2023, disini saya mengembangkan desain UI baru pada website, membuat website manajemen pegawai, mengoptimasi kinerja database
+        Proyek            : proyek saat ini saya membangun aplikasi web untuk mengelola manajemen pegawai, keuangan, absensi di dalam sebuah perusahaan, proyek ini bernama "Rekan Kamu" saya membangun sistem ini bersama teman saya yang bernama Dwika
+        Pendidikan        : saya kuliah di Kampus Alfa Prima dengan jurusan Manajemen Informatika dan Komputer jenjang D1 dan lulus pada tahun 2023
+        Portofolio        :
+        •	https://my-web-portofolio-pearl.vercel.app        | deskripsi: ini adalah website portofolio saya
+        •	https://next-rekan-kamu.vercel.app/login          | deskripsi: ini adalah website manajemen pegawai yang sedang saya kerjakan sekarang
+        •	https://next-ashura-bali.vercel.app               | deskripsi: ini adalah website undangan online untuk acara pernikahan namun tidak dilanjutkan lagi karena kesibukan
+        •	https://devstone-frontend.vercel.app              | deskripsi: ini adalah website landing page namun tidak saya lanjutkan lagi karena kesibukan
+        •	https://cylare-learn-router-in-vite.vercel.app    | deskripsi: ini adalah tugas dari saya untuk mempelajari router pada Vite Js
+        •	https://cylare-next-app-on-vercel.vercel.app/docs | deskripsi: saya membuat website kloning dari dokumentasi resmi Next Js
+        Keterampilan      :
         •	Bahasa Pemrograman: Html, CSS, JavaScript, Typescript
         •	Framework: Next Js, Laravel, Node.js
         •	Database: MySQL, PostgreSQL
         •	Tools: Git, Docker, AWS, GCP
-        Portofolio: https://my-web-portofolio-pearl.vercel.app
-        hobi: membuat musik menggunakan FL Studio sejak kurang lebih 8 tahun, bermain mobile legend, dan ngoding sejak tahun 2022
+        hobi              : membuat musik menggunakan FL Studio sejak kurang lebih 8 tahun, bermain mobile legend, dan ngoding sejak tahun 2022
+        Q&A               :
+        •	apakah anda merokok?
+        jawaban: tidak, saya tidak merokok tapi saya ngevape
+        •	anda tidur jam berapa?
+        jawaban: biasanya jam 12 malam
+
+        Instructions      : jika jawab dari pertanyaan itu tidak ada disini, maka jawab dengan "silahkan membaca informasi secara manual pada tombol di pojok kanan atas"
     `
 
     const body = await req.json();

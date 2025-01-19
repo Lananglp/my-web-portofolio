@@ -31,7 +31,7 @@ export default function Chatbot() {
       }
     } catch (error) {
       console.error('Error fetching AI response:', error);
-      setChatResponse('An error occurred.');
+      setChatResponse('An error occurred, please get the information manually by pressing the button above.');
     } finally {
       setLoading(false);
       setChatPrevious(userMessage);
@@ -48,10 +48,11 @@ export default function Chatbot() {
   return (
     <div className='h-full flex flex-col'>
       <div className="flex-grow bg-zinc-200 dark:bg-zinc-900 rounded-lg">
-        <div className='bg-zinc-200 dark:bg-zinc-800/50 rounded-t-lg shadow-lg mb-4'>
+        <div className='bg-zinc-200 dark:bg-zinc-800/50 rounded-t-lg shadow-lg shadow-black/5'>
           <h2 className="px-4 py-2 dark:text-white">Live chat</h2>
         </div>
-        <div className='max-h-[calc(52vh-4rem)] overflow-y-auto px-6'>
+        {/* <div className='min-h-[calc(100vh-16.25rem)] md:min-h-0 max-h-[calc(100vh-16.25rem)] md:max-h-[calc(50vh-4rem)] overflow-y-auto px-6'> */}
+        <div className='h-[calc(100vh-15.25rem)] md:h-[385px] overflow-y-auto px-6 py-4'>
           <div className='flex justify-end'>
             {!isTyping ?
               chatPrevious ? (
@@ -64,10 +65,10 @@ export default function Chatbot() {
           </div>
           <div>
             <div className='flex items-center gap-1.5'>
-              <div className="relative bg-zinc-200 dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
+              <div className="relative bg-white dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
                 <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
               </div>
-              <h6 className='dark:text-white'>Lanang Lanusa</h6>
+              <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
             </div>
             {!loading ?
               chatResponse ? (

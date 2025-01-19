@@ -1,7 +1,7 @@
 'use client'
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Bot, MessageCircleMore, MessageCircleOff, UserRound, X } from "lucide-react";
+import { ArrowBigLeft, ArrowLeft, Bot, MessageCircleMore, MessageCircleOff, UserRound, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -33,10 +33,10 @@ export default function Home() {
 
   return (
     <div>
-      <div className="container mx-auto max-w-6xl px-4 py-4 lg:py-24">
+      <div className="container mx-auto max-w-6xl px-4 pt-4 xl:pt-24 pb-4">
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="basis-[32rem]">
-            <div className="sticky top-4 lg:top-24">
+          <div className={`${liveChat ? 'hidden md:block' : ''} basis-[32rem]`}>
+            <div className="sticky top-4 xl:top-24">
               <div className="bg-zinc-100 dark:bg-zinc-800 rounded-xl dark:shadow-lg dark:shadow-black/25 p-6">
                 <div className="flex items-center gap-1.5 mb-4">
                   <div className="w-3 h-3 rounded-full bg-red-500" />
@@ -86,14 +86,14 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="basis-full relative bg-zinc-100 dark:bg-zinc-800 rounded-xl shadow-lg shadow-black/25 p-6">
+          <div className="basis-full relative bg-zinc-100 dark:bg-zinc-800 rounded-xl dark:shadow-lg shadow-black/25 px-2 md:px-6 py-6">
             <div className="absolute top-6 start-6 flex items-center gap-1.5 mb-4">
               <div className="w-3 h-3 rounded-full bg-red-500" />
               <div className="w-3 h-3 rounded-full bg-yellow-500" />
               <div className="w-3 h-3 rounded-full bg-green-500" />
             </div>
             {!liveChat ? (
-              <div className="h-full pt-8">
+              <div className="h-full px-4 md:px-0 pt-8">
                 <p className="mb-6 text-zinc-500 dark:text-zinc-300">I am a dedicated Frontend Developer with a strong foundation in HTML, CSS, and JavaScript, complemented by hands-on experience in frameworks like Next.js and React.js.</p>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
@@ -180,7 +180,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="h-full pt-8">
-                <Button className="absolute top-4 right-6" size={'sm'} variant={'ghost'} onClick={() => setLiveChat(false)}><X />Close</Button>
+                <Button className="absolute top-4 right-6" size={'sm'} variant={'ghost'} onClick={() => setLiveChat(false)}><ArrowLeft />Manual Information</Button>
                 <Chatbot />
               </div>
             )}
