@@ -81,6 +81,7 @@ export default function Chatbot() {
           </div>
         </div>
       </div>
+      
       <div className='flex-none pt-2'>
         <div className='relative'>
           <Textarea
