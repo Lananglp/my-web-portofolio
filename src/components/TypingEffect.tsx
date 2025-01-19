@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import 'prismjs/themes/prism-tomorrow.css';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-javascript'; // Untuk kode JS
@@ -9,12 +9,15 @@ import 'prismjs/components/prism-markup'; // Untuk kode HTML
 function TypingEffect ({
     text,
     typingSpeed = 10,
+    onFinish,
 }: {
     text: string;
     typingSpeed?: number;
+    onFinish?: () => void;
 }) {
     const [typingText, setTypingText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+    // const containerRef = useRef<HTMLDivElement>(null); // Ref untuk container
 
     useEffect(() => {
         if (typeof window === 'undefined' || !text) return;
@@ -30,6 +33,7 @@ function TypingEffect ({
             if (i >= text.length) {
                 clearInterval(interval); // Hentikan interval jika semua karakter sudah ditambahkan.
                 setIsTyping(false);
+                if (onFinish) onFinish(); // Panggil callback setelah selesai
             }
         }, typingSpeed);
 
@@ -63,6 +67,12 @@ function TypingEffect ({
     };
 
     const blocks = parseText(typingText);
+
+    // useEffect(() => {
+    //     if (isTyping && containerRef.current) {
+    //         containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    //     }
+    // }, [typingText, isTyping]);
 
     // Highlight kode dengan Prism.js
     useEffect(() => {

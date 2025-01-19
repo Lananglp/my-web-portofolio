@@ -86,7 +86,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="basis-full relative bg-zinc-100 dark:bg-zinc-800 rounded-xl dark:shadow-lg shadow-black/25 px-2 md:px-6 py-6">
+          <div className="basis-full relative bg-zinc-100 dark:bg-zinc-800 rounded-xl dark:shadow-lg shadow-black/25 px-2 md:px-6 pt-6 pb-2 md:pb-6">
             <div className="absolute top-6 start-6 flex items-center gap-1.5 mb-4">
               <div className="w-3 h-3 rounded-full bg-red-500" />
               <div className="w-3 h-3 rounded-full bg-yellow-500" />
