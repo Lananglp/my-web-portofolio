@@ -1,0 +1,92 @@
+'use client';
+
+import { useEffect, useState } from "react";
+import 'prismjs/themes/prism-tomorrow.css';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-javascript'; // Untuk kode JS
+import 'prismjs/components/prism-markup'; // Untuk kode HTML
+
+function TypingEffect ({
+    text,
+    typingSpeed = 10,
+}: {
+    text: string;
+    typingSpeed?: number;
+}) {
+    const [typingText, setTypingText] = useState('');
+    const [isTyping, setIsTyping] = useState(false);
+
+    useEffect(() => {
+        if (typeof window === 'undefined' || !text) return;
+
+        setTypingText(''); // Reset teks sebelum mulai mengetik.
+        setIsTyping(true);
+
+        let i = 0; // Indeks dimulai dari 0.
+
+        const interval = setInterval(() => {
+            setTypingText((prevText) => prevText + text.charAt(i)); // Tambahkan karakter berikutnya.
+            i++;
+            if (i >= text.length) {
+                clearInterval(interval); // Hentikan interval jika semua karakter sudah ditambahkan.
+                setIsTyping(false);
+            }
+        }, typingSpeed);
+
+        setTypingText(text.charAt(0)); // Tambahkan karakter pertama sebelum interval mulai bekerja.
+
+        return () => clearInterval(interval); // Bersihkan interval jika teks berubah.
+    }, [text, typingSpeed]);
+
+    // Fungsi untuk memproses teks dan memisahkan blok berdasarkan kondisi
+    const parseText = (input: string) => {
+        const blocks: (string | { type: 'code' | 'bold'; content: string })[] = [];
+        const regex = /```([\s\S]*?)```|\*\*(.*?)\*\*/g;
+        let lastIndex = 0;
+
+        let match;
+        while ((match = regex.exec(input)) !== null) {
+            if (match.index > lastIndex) {
+                blocks.push(input.slice(lastIndex, match.index));
+            }
+            if (match[1]) {
+                blocks.push({ type: 'code', content: match[1] }); // Blok kode
+            } else if (match[2]) {
+                blocks.push({ type: 'bold', content: match[2] }); // Teks tebal
+            }
+            lastIndex = regex.lastIndex;
+        }
+        if (lastIndex < input.length) {
+            blocks.push(input.slice(lastIndex));
+        }
+        return blocks;
+    };
+
+    const blocks = parseText(typingText);
+
+    // Highlight kode dengan Prism.js
+    useEffect(() => {
+        Prism.highlightAll(); // Highlight semua elemen <code> setelah render
+    }, [blocks]);
+
+    return (
+        <div className="px-3 mt-2 whitespace-pre-wrap">
+            {blocks.map((block, index) =>
+                typeof block === 'string' ? (
+                    <span key={index}>{block}</span>
+                ) : block.type === 'code' ? (
+                    <pre
+                        key={index}
+                        className="bg-transparent p-3 rounded-xl text-sm max-w-[50vh] max-h-96"
+                    >
+                        <code className="language-javascript">{block.content}</code>
+                    </pre>
+                ) : (
+                    <strong className="font-semibold text-lg dark:text-white" key={index}>{block.content}</strong>
+                )
+            )}
+        </div>
+    );
+};
+
+export default TypingEffect;

@@ -1,37 +1,40 @@
+'use client';
+import dynamic from 'next/dynamic';
+const TypingEffect = dynamic(() => import('@/components/TypingEffect'), { ssr: false });
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { LoaderCircle, Send, UserRound } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
-const TypingEffect = ({ text, typingSpeed=10 }: { text: string; typingSpeed?: number }) => {
-  const [typingText, setTypingText] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+// const TypingEffect = ({ text, typingSpeed=10 }: { text: string; typingSpeed?: number }) => {
+//   const [typingText, setTypingText] = useState('');
+//   const [isTyping, setIsTyping] = useState(false);
 
-  useEffect(() => {
-    if (!text) return; // Jika teks kosong, tidak ada yang dilakukan.
+//   useEffect(() => {
+//     if (!text) return; // Jika teks kosong, tidak ada yang dilakukan.
 
-    setTypingText(''); // Reset teks sebelum mulai mengetik.
-    setIsTyping(true);
+//     setTypingText(''); // Reset teks sebelum mulai mengetik.
+//     setIsTyping(true);
 
-    let i = 0; // Indeks dimulai dari 0.
+//     let i = 0; // Indeks dimulai dari 0.
 
-    const interval = setInterval(() => {
-      setTypingText((prevText) => prevText + text.charAt(i)); // Tambahkan karakter berikutnya.
-      i++;
-      if (i >= text.length) {
-        clearInterval(interval); // Hentikan interval jika semua karakter sudah ditambahkan.
-        setIsTyping(false);
-      }
-    }, typingSpeed);
+//     const interval = setInterval(() => {
+//       setTypingText((prevText) => prevText + text.charAt(i)); // Tambahkan karakter berikutnya.
+//       i++;
+//       if (i >= text.length) {
+//         clearInterval(interval); // Hentikan interval jika semua karakter sudah ditambahkan.
+//         setIsTyping(false);
+//       }
+//     }, typingSpeed);
 
-    // Tambahkan karakter pertama sebelum interval mulai bekerja.
-    setTypingText(text.charAt(0));
+//     // Tambahkan karakter pertama sebelum interval mulai bekerja.
+//     setTypingText(text.charAt(0));
 
-    return () => clearInterval(interval); // Bersihkan interval jika teks berubah.
-  }, [text, typingSpeed]);
+//     return () => clearInterval(interval); // Bersihkan interval jika teks berubah.
+//   }, [text, typingSpeed]);
 
-  return <span>{typingText}</span>;
-};
+//   return <span>{typingText}</span>;
+// };
 
 interface memoryProps {
   chat: {
@@ -147,9 +150,9 @@ export default function Chatbot() {
                       </div>
                       <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
                     </div>
-                    <p className='px-3 mt-2 whitespace-pre-wrap'>
+                    <div>
                       <TypingEffect text={item.content} />
-                    </p>
+                    </div>
                   </div>
                 }
               </React.Fragment>
@@ -161,9 +164,9 @@ export default function Chatbot() {
                   </div>
                   <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
                 </div>
-                <p className='px-3 mt-2 whitespace-pre-wrap'>
+                <div>
                   <TypingEffect text={"hello, is there anything you want to ask me?"} />
-                </p>
+                </div>
               </div>
             )}
           {/* <div className='flex justify-end'>
