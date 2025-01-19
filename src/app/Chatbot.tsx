@@ -17,15 +17,15 @@ export default function Chatbot() {
     setChatResponse(''); // Reset response
 
     try {
-      const response = await fetch('http://localhost:3000/api/anjay', {
+      const response = await fetch('http://localhost:3000/api/ask-to-ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userMessage }),
       });
 
       const data = await response.json();
-      if (data.aiResponse) {
-        setChatResponse(data.aiResponse);
+      if (data.message) {
+        setChatResponse(data.message);
       } else {
         setChatResponse('No response from AI.');
       }
