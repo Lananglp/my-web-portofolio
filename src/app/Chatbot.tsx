@@ -17,7 +17,7 @@ export default function Chatbot() {
     setChatResponse(''); // Reset response
 
     try {
-      const response = await fetch('http://localhost:3000/api/ask-to-ai', {
+      const response = await fetch('/api/ask-to-ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userMessage }),
@@ -81,7 +81,7 @@ export default function Chatbot() {
           </div>
         </div>
       </div>
-      
+
       <div className='flex-none pt-2'>
         <div className='relative'>
           <Textarea
