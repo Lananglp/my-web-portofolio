@@ -154,8 +154,7 @@ export default function Chatbot() {
                         <p className='px-3 mt-2 whitespace-pre-wrap'>{item.content}</p>
                       )} */}
                       {/* <TypingEffect onTyping={isGenerate} text={item.content} onFinish={finishedRespon} /> */}
-                      {/* <TypingEffect text={item.content} onFinish={finishedRespon} /> */}
-                      <TypingEffect text={item.content} />
+                      <TypingEffect text={item.content} onFinish={finishedRespon} />
                       {/* <p className='px-3 mt-2 whitespace-pre-wrap'>{item.content}</p> */}
                     </div>
                   </div>
