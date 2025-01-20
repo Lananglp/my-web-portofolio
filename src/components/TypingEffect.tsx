@@ -10,14 +10,16 @@ function TypingEffect ({
     text,
     typingSpeed = 10,
     onFinish,
+    onProcess
 }: {
     text: string;
     typingSpeed?: number;
     onFinish?: () => void;
+    onProcess?: () => void;
 }) {
     const [typingText, setTypingText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
-    // const containerRef = useRef<HTMLDivElement>(null); // Ref untuk container
+    const containerRef = useRef<HTMLDivElement>(null); // Ref untuk container
 
     useEffect(() => {
         if (typeof window === 'undefined' || !text) return;
@@ -26,20 +28,52 @@ function TypingEffect ({
         setIsTyping(true);
 
         let i = 0; // Indeks dimulai dari 0.
+        let userActive = false;
+        let inactivityTimer: NodeJS.Timeout;
+
+        // const handleUserInteraction = () => {
+        //     userActive = true;
+        //     clearTimeout(inactivityTimer);
+        //     inactivityTimer = setTimeout(() => {
+        //         userActive = false;
+        //     }, 2000); // 2 detik setelah tidak ada aktivitas, dianggap tidak aktif
+        // };
+        const handleUserInteraction = () => {
+            userActive = true;
+        };
+
+        document.addEventListener('mousemove', handleUserInteraction);
+        document.addEventListener('scroll', handleUserInteraction);
+        document.addEventListener('click', handleUserInteraction);
 
         const interval = setInterval(() => {
             setTypingText((prevText) => prevText + text.charAt(i)); // Tambahkan karakter berikutnya.
+
+            if (!userActive && onProcess) {
+                onProcess();  // Jalankan hanya jika pengguna tidak aktif
+            }
+
+            if (containerRef.current && !userActive) {
+                containerRef.current.scrollTop = containerRef.current.scrollHeight;
+            }
+
             i++;
             if (i >= text.length) {
                 clearInterval(interval); // Hentikan interval jika semua karakter sudah ditambahkan.
                 setIsTyping(false);
-                if (onFinish) onFinish(); // Panggil callback setelah selesai
+                if (onFinish && !userActive) onFinish(); // Panggil callback setelah selesai
             }
         }, typingSpeed);
 
         setTypingText(text.charAt(0)); // Tambahkan karakter pertama sebelum interval mulai bekerja.
 
-        return () => clearInterval(interval); // Bersihkan interval jika teks berubah.
+        return () => {
+            clearInterval(interval); // Bersihkan interval jika teks berubah.
+            document.removeEventListener('mousemove', handleUserInteraction);
+            document.removeEventListener('scroll', handleUserInteraction);
+            document.removeEventListener('click', handleUserInteraction);
+            // clearTimeout(inactivityTimer);
+        };
     }, [text, typingSpeed]);
 
     // Fungsi untuk memproses teks dan memisahkan blok berdasarkan kondisi
@@ -68,19 +102,16 @@ function TypingEffect ({
 
     const blocks = parseText(typingText);
 
-    // useEffect(() => {
-    //     if (isTyping && containerRef.current) {
-    //         containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    //     }
-    // }, [typingText, isTyping]);
-
     // Highlight kode dengan Prism.js
     useEffect(() => {
         Prism.highlightAll(); // Highlight semua elemen <code> setelah render
     }, [blocks]);
 
     return (
-        <div className="px-3 mt-2 whitespace-pre-wrap">
+        <div 
+            ref={containerRef} 
+            className="px-3 mt-2 whitespace-pre-wrap"
+        >
             {blocks.map((block, index) =>
                 typeof block === 'string' ? (
                     <span key={index}>{block}</span>

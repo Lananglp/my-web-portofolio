@@ -110,7 +110,7 @@ export default function Chatbot() {
                       <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
                     </div>
                     <div>
-                      <TypingEffect text={item.content} onFinish={scrollToBottom} />
+                      <TypingEffect text={item.content} onProcess={scrollToBottom} onFinish={scrollToBottom} />
                     </div>
                   </div>
                 }
