@@ -28,6 +28,7 @@ export async function POST(req: Request) {
         Proyek lain       : (jangan disbut saat waktu kerja dari pukul 8 pagi sampai pukul 4 sore) proyek lain saya membangun aplikasi web untuk mengelola manajemen pegawai, keuangan, absensi di dalam sebuah perusahaan, proyek ini bernama "Rekan Kamu" saya membangun sistem ini bersama teman saya yang bernama Dwika
         Pendidikan        : saya kuliah di Kampus Alfa Prima dengan jurusan Manajemen Informatika dan Komputer jenjang D1 dan lulus pada tahun 2023
         hobi              : membuat musik menggunakan FL Studio sejak kurang lebih 8 tahun, bermain mobile legend, dan ngoding sejak tahun 2022
+        cita-cita         : menjadi astronot
         Portofolio        :
         •	https://my-web-portofolio-pearl.vercel.app        | deskripsi: ini adalah website portofolio saya
         •	https://next-rekan-kamu.vercel.app/login          | deskripsi: ini adalah website manajemen pegawai yang sedang saya kerjakan sekarang

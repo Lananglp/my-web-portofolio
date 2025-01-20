@@ -3,53 +3,80 @@
 import { useEffect, useRef, useState } from "react";
 import 'prismjs/themes/prism-tomorrow.css';
 import Prism from 'prismjs';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-markup';
+import 'prismjs/components/prism-javascript'; // Untuk kode JS
+import 'prismjs/components/prism-markup'; // Untuk kode HTML
 
 function TypingEffect ({
     text,
-    typingSpeed = 7,
+    typingSpeed = 10,
     onFinish,
+    onProcess
 }: {
     text: string;
     typingSpeed?: number;
     onFinish?: () => void;
+    onProcess?: () => void;
 }) {
     const [typingText, setTypingText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null); // Ref untuk container
 
     useEffect(() => {
         if (typeof window === 'undefined' || !text) return;
 
-        setTypingText('');
+        setTypingText(''); // Reset teks sebelum mulai mengetik.
         setIsTyping(true);
 
-        let i = 0;
+        let i = 0; // Indeks dimulai dari 0.
+        let userActive = false;
+        let inactivityTimer: NodeJS.Timeout;
+
+        // const handleUserInteraction = () => {
+        //     userActive = true;
+        //     clearTimeout(inactivityTimer);
+        //     inactivityTimer = setTimeout(() => {
+        //         userActive = false;
+        //     }, 2000); // 2 detik setelah tidak ada aktivitas, dianggap tidak aktif
+        // };
+        const handleUserInteraction = () => {
+            userActive = true;
+        };
+
+        document.addEventListener('mousemove', handleUserInteraction);
+        document.addEventListener('scroll', handleUserInteraction);
+        document.addEventListener('click', handleUserInteraction);
 
         const interval = setInterval(() => {
-            setTypingText((prevText) => prevText + text.charAt(i));
+            setTypingText((prevText) => prevText + text.charAt(i)); // Tambahkan karakter berikutnya.
 
-            if (containerRef.current) {
+            if (!userActive && onProcess) {
+                onProcess();  // Jalankan hanya jika pengguna tidak aktif
+            }
+
+            if (containerRef.current && !userActive) {
                 containerRef.current.scrollTop = containerRef.current.scrollHeight;
             }
 
             i++;
             if (i >= text.length) {
-                clearInterval(interval);
+                clearInterval(interval); // Hentikan interval jika semua karakter sudah ditambahkan.
                 setIsTyping(false);
-                if (onFinish) onFinish();
+                if (onFinish && !userActive) onFinish(); // Panggil callback setelah selesai
             }
         }, typingSpeed);
 
-        setTypingText(text.charAt(0));
+        setTypingText(text.charAt(0)); // Tambahkan karakter pertama sebelum interval mulai bekerja.
 
         return () => {
-            clearInterval(interval);
+            clearInterval(interval); // Bersihkan interval jika teks berubah.
+            document.removeEventListener('mousemove', handleUserInteraction);
+            document.removeEventListener('scroll', handleUserInteraction);
+            document.removeEventListener('click', handleUserInteraction);
+            // clearTimeout(inactivityTimer);
         };
     }, [text, typingSpeed]);
 
-   
+    // Fungsi untuk memproses teks dan memisahkan blok berdasarkan kondisi
     const parseText = (input: string) => {
         const blocks: (string | { type: 'code' | 'bold'; content: string })[] = [];
         const regex = /```([\s\S]*?)```|\*\*(.*?)\*\*/g;
@@ -61,9 +88,9 @@ function TypingEffect ({
                 blocks.push(input.slice(lastIndex, match.index));
             }
             if (match[1]) {
-                blocks.push({ type: 'code', content: match[1] });
+                blocks.push({ type: 'code', content: match[1] }); // Blok kode
             } else if (match[2]) {
-                blocks.push({ type: 'bold', content: match[2] });
+                blocks.push({ type: 'bold', content: match[2] }); // Teks tebal
             }
             lastIndex = regex.lastIndex;
         }
@@ -75,9 +102,9 @@ function TypingEffect ({
 
     const blocks = parseText(typingText);
 
-   
+    // Highlight kode dengan Prism.js
     useEffect(() => {
-        Prism.highlightAll();
+        Prism.highlightAll(); // Highlight semua elemen <code> setelah render
     }, [blocks]);
 
     return (

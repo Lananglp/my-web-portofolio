@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 const TypingEffect = dynamic(() => import('@/components/TypingEffect'), { ssr: false });
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { LoaderCircle, Send, UserRound } from 'lucide-react';
+import { LoaderCircle, MoveDown, Send, UserRound, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface memoryProps {
@@ -21,14 +21,17 @@ export default function Chatbot() {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [memory, setMemory] = useState<memoryProps>({chat: []});
+  const [memory, setMemory] = useState<memoryProps>({ chat: [] });
   const [logError, setLogError] = useState<string>('');
+  const [isGenerate, setIsGenerate] = useState<boolean>(false);
+  const [isAtBottom, setIsAtBottom] = useState<boolean>(true);
 
   const handleSendMessage = async () => {
     if (!userMessage) return;
     setLoading(true);
     setChatResponse(''); // Reset response
     setLogError('');
+    setIsGenerate(true);
     setMemory((prev) => ({
       ...prev,
       chat: [...prev.chat, { role: "user", content: userMessage }],
@@ -85,9 +88,43 @@ export default function Chatbot() {
     }
   };
 
+  const handleScroll = () => {
+    if (chatContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+      setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 5);
+    }
+  };
+
+  useEffect(() => {
+    const chatDiv = chatContainerRef.current;
+    if (chatDiv) {
+      chatDiv.addEventListener('scroll', handleScroll);
+      // Pastikan cek posisi awal saat mount
+      handleScroll();
+    }
+    return () => {
+      if (chatDiv) {
+        chatDiv.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
+  const finishedRespon = () => {
+    setIsGenerate(false);
+    // scrollToBottom();
+  }
+
   return (
     <div className='h-full flex flex-col'>
-      <div className="flex-grow bg-zinc-200 dark:bg-zinc-900 rounded-lg">
+      <div className="flex-grow relative bg-zinc-200 dark:bg-zinc-900 rounded-lg">
+        {!isAtBottom && (
+          <div
+            onClick={scrollToBottom}
+            className='absolute end-10 bottom-6 bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer'
+          >
+            <MoveDown className='h-4 w-4' />
+          </div>
+        )}
         <div className='bg-zinc-200 dark:bg-zinc-800/50 rounded-t-lg shadow-lg shadow-black/5'>
           <h2 className="px-4 py-2 dark:text-white"><div className='inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse mb-0.5 me-1' /> Live chat <span className='text-xs text-zinc-600 dark:text-zinc-400'>(Chat not be saved)</span></h2>
         </div>
@@ -110,7 +147,14 @@ export default function Chatbot() {
                       <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
                     </div>
                     <div>
-                      <TypingEffect text={item.content} onProcess={scrollToBottom} onFinish={scrollToBottom} />
+                      {/* {index === memory.chat.length - 1 ? (
+                        <TypingEffect text={item.content} onFinish={finishedRespon} />
+                      ) : (
+                        <p className='px-3 mt-2 whitespace-pre-wrap'>{item.content}</p>
+                      )} */}
+                      {/* <TypingEffect onTyping={isGenerate} text={item.content} onFinish={finishedRespon} /> */}
+                      <TypingEffect text={item.content} onFinish={finishedRespon} />
+                      {/* <p className='px-3 mt-2 whitespace-pre-wrap'>{item.content}</p> */}
                     </div>
                   </div>
                 }
@@ -147,7 +191,7 @@ export default function Chatbot() {
                   </div>
                   <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
                 </div>
-                <p className='px-3 mt-2 animate-pulse'><LoaderCircle className='inline h-4 w-4 animate-spin mb-0.5 me-1' />{logError}</p>
+                <p className='px-3 mt-2'><X className='inline text-red-500 h-5 w-5 mb-0.5 me-1' />{logError}</p>
               </div>
             )
           )}
@@ -239,35 +283,35 @@ export default function Chatbot() {
 
 
 // const handleSendMessage = async () => {
-  //   if (!userMessage) return;
-  //   setLoading(true);
-  //   setChatResponse(''); // Reset response
+//   if (!userMessage) return;
+//   setLoading(true);
+//   setChatResponse(''); // Reset response
 
-  //   try {
-  //     const response = await fetch('/api/ask-to-ai', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ userMessage }),
-  //     });
+//   try {
+//     const response = await fetch('/api/ask-to-ai', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ userMessage }),
+//     });
 
-  //     const data = await response.json();
-  //     if (data.message) {
-  //       setChatResponse(data.message);
-  //     } else {
-  //       setChatResponse('No response from AI.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching AI response:', error);
-  //     setChatResponse('An error occurred, please get the information manually by pressing the button above.');
-  //   } finally {
-  //     setLoading(false);
-  //     setChatPrevious(userMessage);
-  //     setIsTyping(false);
-  //     setUserMessage('');
-  //     if (textareaRef.current) {
-  //       textareaRef.current?.blur();
-  //     } else {
-  //       console.log("textareaRef.current is null");
-  //     }
-  //   }
-  // };
+//     const data = await response.json();
+//     if (data.message) {
+//       setChatResponse(data.message);
+//     } else {
+//       setChatResponse('No response from AI.');
+//     }
+//   } catch (error) {
+//     console.error('Error fetching AI response:', error);
+//     setChatResponse('An error occurred, please get the information manually by pressing the button above.');
+//   } finally {
+//     setLoading(false);
+//     setChatPrevious(userMessage);
+//     setIsTyping(false);
+//     setUserMessage('');
+//     if (textareaRef.current) {
+//       textareaRef.current?.blur();
+//     } else {
+//       console.log("textareaRef.current is null");
+//     }
+//   }
+// };

@@ -8,57 +8,54 @@ import 'prismjs/components/prism-markup';
 
 function TypingEffect ({
     text,
-    typingSpeed = 7,
+    typingSpeed = 10,
     onFinish,
+    onTyping = true
 }: {
     text: string;
     typingSpeed?: number;
     onFinish?: () => void;
+    onTyping?: boolean;
 }) {
     const [typingText, setTypingText] = useState('');
-    const [isTyping, setIsTyping] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (typeof window === 'undefined' || !text) return;
+        if (!text) return;
 
         setTypingText('');
-        setIsTyping(true);
-
         let i = 0;
+        
+        if (onTyping) {
+            const interval = setInterval(() => {
+                setTypingText((prevText) => prevText + text.charAt(i));
+                i++;
 
-        const interval = setInterval(() => {
-            setTypingText((prevText) => prevText + text.charAt(i));
+                if (containerRef.current) {
+                    containerRef.current.scrollTop = containerRef.current.scrollHeight;
+                }
 
-            if (containerRef.current) {
-                containerRef.current.scrollTop = containerRef.current.scrollHeight;
-            }
+                if (i >= text.length) {
+                    clearInterval(interval);
+                    if (onFinish) onFinish();
+                }
+            }, typingSpeed);
 
-            i++;
-            if (i >= text.length) {
-                clearInterval(interval);
-                setIsTyping(false);
-                if (onFinish) onFinish();
-            }
-        }, typingSpeed);
+            return () => clearInterval(interval);
+        } else {
+            setTypingText(text);
+            if (onFinish) onFinish();
+        }
+    }, [text, typingSpeed, onTyping]);
 
-        setTypingText(text.charAt(0));
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [text, typingSpeed]);
-
-   
     const parseText = (input: string) => {
         const blocks: (string | { type: 'code' | 'bold'; content: string })[] = [];
         const regex = /```([\s\S]*?)```|\*\*(.*?)\*\*/g;
         let lastIndex = 0;
-
         let match;
         while ((match = regex.exec(input)) !== null) {
             if (match.index > lastIndex) {
-                blocks.push(input.slice(lastIndex, match.index));
+                blocks.push(input.slice(lastIndex, match.index).replace(/\s+/g, ' '));
             }
             if (match[1]) {
                 blocks.push({ type: 'code', content: match[1] });
@@ -68,31 +65,24 @@ function TypingEffect ({
             lastIndex = regex.lastIndex;
         }
         if (lastIndex < input.length) {
-            blocks.push(input.slice(lastIndex));
+            blocks.push(input.slice(lastIndex).replace(/\s+/g, ' '));
         }
         return blocks;
     };
 
     const blocks = parseText(typingText);
 
-   
     useEffect(() => {
         Prism.highlightAll();
     }, [blocks]);
 
     return (
-        <div 
-            ref={containerRef} 
-            className="px-3 mt-2 whitespace-pre-wrap"
-        >
+        <div ref={containerRef} className="px-3 mt-2 whitespace-pre-wrap">
             {blocks.map((block, index) =>
                 typeof block === 'string' ? (
                     <span key={index}>{block}</span>
                 ) : block.type === 'code' ? (
-                    <pre
-                        key={index}
-                        className="bg-transparent p-3 rounded-xl text-sm max-w-[50vh] max-h-96"
-                    >
+                    <pre key={index} className="bg-transparent p-3 rounded-xl text-sm max-w-[50vh] max-h-96">
                         <code className="language-javascript">{block.content}</code>
                     </pre>
                 ) : (
