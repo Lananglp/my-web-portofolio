@@ -121,7 +121,7 @@ export default function Chatbot() {
         {!isAtBottom && (
           <div
             onClick={scrollToBottom}
-            className='absolute end-10 bottom-6 bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer'
+            className='absolute z-10 end-3 md:end-10 bottom-3 md:bottom-6 bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer'
           >
             <MoveDown className='h-4 w-4' />
           </div>
@@ -130,12 +130,12 @@ export default function Chatbot() {
           <h2 className="px-4 py-2 dark:text-white"><div className='inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse mb-0.5 me-1' /> Live chat <span className='text-xs text-zinc-600 dark:text-zinc-400'>(Chat not be saved)</span></h2>
         </div>
         {/* <div className='min-h-[calc(100vh-16.25rem)] md:min-h-0 max-h-[calc(100vh-16.25rem)] md:max-h-[calc(50vh-4rem)] overflow-y-auto px-6'> */}
-        <div ref={chatContainerRef} className='h-[calc(100vh-14.4rem)] md:h-[385px] overflow-y-auto px-6 py-4'>
+        <div ref={chatContainerRef} className='h-[calc(100vh-14.4rem)] md:h-[385px] overflow-y-auto px-3 md:px-6 py-2 md:py-4'>
           {memory.chat.length > 0 ?
             memory.chat.map((item, index) => (
               <React.Fragment key={index}>
                 {item.role === 'user' &&
-                  <div className='flex justify-end'>
+                  <div className='flex justify-end mb-3'>
                     <p className='w-3/4 md:w-1/2 bg-zinc-100 dark:bg-zinc-800 rounded-lg px-4 py-2 my-2'>{item.content}</p>
                   </div>
                 }

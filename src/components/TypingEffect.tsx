@@ -68,11 +68,11 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed = 10 }) => {
                         {block.content}
                     </kbd>
                 ) : block.type === 'code' ? (
-                    <div className='max-w-[50vh] max-h-96 relative pt-[1.27rem]'>
+                    <div key={index} className='md:max-w-[65vh] relative pt-[1.26rem]'>
                         <div className='absolute inset-x-0 top-0 bg-zinc-800 text-zinc-300 rounded-t-xl px-4 py-1'>
                             <p className='text-sm'>{block.language || 'plaintext'}</p>
                         </div>
-                        <pre key={index} className="bg-transparent p-3 rounded-b-xl text-sm">
+                        <pre className="bg-transparent p-3 rounded-b-xl text-sm">
                             <code className={`language-${block.language}`}>{block.content}</code>
                         </pre>
                     </div>
