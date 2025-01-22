@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react"
+import ReduxProvider from "./ReduxProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -20,8 +21,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lananglp's Portfolio",
-  description: "Lananglp's Portfolio",
+  title: "Lananglp's Portofolio",
+  description: "Lananglp's Portofolio",
 };
 
 export default function RootLayout({
@@ -34,7 +35,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} antialiased`}
       >
-        {children}
+        <ReduxProvider>
+          {children}
+        </ReduxProvider>
         <Analytics/>
       </body>
     </html>

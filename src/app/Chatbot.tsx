@@ -5,14 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { LoaderCircle, MoveDown, Send, UserRound, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
-import TypingEffect from '@/components/TypingEffect';
-
-interface memoryProps {
-  chat: {
-    role: "user" | "sistem";
-    content: string;
-  }[];
-}
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './redux';
+import { addChatHistory } from './globalState/chatHistorySlice';
+import ChatbotSection from './ChatbotSection';
+import { setIsThingking } from './globalState/isThingkingSlice';
 
 export default function Chatbot() {
   const [userMessage, setUserMessage] = useState<string>('');
@@ -22,36 +19,37 @@ export default function Chatbot() {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [memory, setMemory] = useState<memoryProps>({ chat: [] });
   const [logError, setLogError] = useState<string>('');
   const [isGenerate, setIsGenerate] = useState<boolean>(false);
   const [isAtBottom, setIsAtBottom] = useState<boolean>(true);
+  const dispatch = useDispatch();
+  const chatHistory = useSelector((state: RootState) => state.chatHistory.chat);
+  const isLoading = useSelector((state: RootState) => state.isThingking.loading);
+
+  const handleAddHistory = (role: "user" | "model", parts: string) => {
+    dispatch(addChatHistory({ role: role, parts: parts }));
+  };
 
   const handleSendMessage = async () => {
     if (!userMessage) return;
     setLoading(true);
+    dispatch(setIsThingking({ loading: true }));
     setChatResponse(''); // Reset response
     setLogError('');
     setIsGenerate(true);
-    setMemory((prev) => ({
-      ...prev,
-      chat: [...prev.chat, { role: "user", content: userMessage }],
-    }));
+    handleAddHistory("user", userMessage);
 
     try {
       const response = await fetch('/api/ask-to-ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userMessage }),
+        body: JSON.stringify({ userMessage, chatHistory }),
       });
 
       const data = await response.json();
       if (data.message) {
         setChatResponse(data.message);
-        setMemory((prev) => ({
-          ...prev,
-          chat: [...prev.chat, { role: "sistem", content: data.message }],
-        }));
+        handleAddHistory("model", data.message);
       } else {
         setChatResponse('No response from AI.');
         setLogError('No response from AI.');
@@ -62,6 +60,7 @@ export default function Chatbot() {
       setLogError('An error occurred, please get the information manually by pressing the button above.');
     } finally {
       setLoading(false);
+      dispatch(setIsThingking({ loading: false }));
       setChatPrevious(userMessage);
       setIsTyping(false);
       setUserMessage('');
@@ -71,15 +70,6 @@ export default function Chatbot() {
     }
   };
 
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTo({
-        top: chatContainerRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [memory.chat]);
-
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
@@ -88,6 +78,12 @@ export default function Chatbot() {
       });
     }
   };
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      scrollToBottom();
+    }
+  }, [chatHistory]);
 
   const handleScroll = () => {
     if (chatContainerRef.current) {
@@ -129,75 +125,7 @@ export default function Chatbot() {
         <div className='bg-zinc-200 dark:bg-zinc-800/50 rounded-t-lg shadow-lg shadow-black/5'>
           <h2 className="px-4 py-2 dark:text-white"><div className='inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse mb-0.5 me-1' /> Live chat <span className='text-xs text-zinc-600 dark:text-zinc-400'>(Chat not be saved)</span></h2>
         </div>
-        {/* <div className='min-h-[calc(100vh-16.25rem)] md:min-h-0 max-h-[calc(100vh-16.25rem)] md:max-h-[calc(50vh-4rem)] overflow-y-auto px-6'> */}
-        <div ref={chatContainerRef} className='h-[calc(100vh-14.4rem)] md:h-[385px] overflow-y-auto px-3 md:px-6 py-2 md:py-4'>
-          {memory.chat.length > 0 ?
-            memory.chat.map((item, index) => (
-              <React.Fragment key={index}>
-                {item.role === 'user' &&
-                  <div className='flex justify-end mb-3'>
-                    <p className='w-3/4 md:w-1/2 bg-zinc-100 dark:bg-zinc-800 rounded-lg px-4 py-2 my-2'>{item.content}</p>
-                  </div>
-                }
-                {item.role === 'sistem' &&
-                  <div className='mb-3'>
-                    <div className='flex items-center gap-1.5'>
-                      <div className="relative bg-white dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
-                        <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
-                      </div>
-                      <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
-                    </div>
-                    <div>
-                      {/* {index === memory.chat.length - 1 ? (
-                        <TypingEffect text={item.content} onFinish={finishedRespon} />
-                      ) : (
-                        <p className='px-3 mt-2 whitespace-pre-wrap'>{item.content}</p>
-                      )} */}
-                      {/* <TypingEffect onTyping={isGenerate} text={item.content} onFinish={finishedRespon} /> */}
-                      {/* <TypingEffect text={item.content} onFinish={finishedRespon} /> */}
-                      <TypingEffect text={item.content} />
-                      {/* <p className='px-3 mt-2 whitespace-pre-wrap'>{item.content}</p> */}
-                    </div>
-                  </div>
-                }
-              </React.Fragment>
-            )) : (
-              <div className='mb-3'>
-                <div className='flex items-center gap-1.5'>
-                  <div className="relative bg-white dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
-                    <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
-                  </div>
-                  <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
-                </div>
-                <div>
-                  <TypingEffect text={"hello, is there anything you want to ask me?"} />
-                </div>
-              </div>
-            )}
-          {loading ? (
-            <div>
-              <div className='flex items-center gap-1.5'>
-                <div className="relative bg-white dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
-                  <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
-                </div>
-                <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
-              </div>
-              <p className='px-3 mt-2 animate-pulse'><LoaderCircle className='inline h-4 w-4 animate-spin mb-0.5 me-1' />Loading...</p>
-            </div>
-          ) : (
-            logError && (
-              <div>
-                <div className='flex items-center gap-1.5'>
-                  <div className="relative bg-white dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
-                    <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
-                  </div>
-                  <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
-                </div>
-                <p className='px-3 mt-2'><X className='inline text-red-500 h-5 w-5 mb-0.5 me-1' />{logError}</p>
-              </div>
-            )
-          )}
-        </div>
+        <ChatbotSection chatHistory={chatHistory} loading={loading} logError={logError} ref={chatContainerRef} />
       </div>
 
       <div className='flex-none pt-2'>

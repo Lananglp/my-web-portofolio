@@ -8,6 +8,10 @@ import { useEffect, useState } from "react";
 import { FaGithub, FaInstagram, FaLinkedin, FaTelegram } from "react-icons/fa6";
 import Chatbot from "./Chatbot";
 import { Button } from "@/components/ui/button";
+import { useSelector } from "react-redux";
+import { RootState } from "./redux";
+import * as motion from "motion/react-client"
+import { AnimatePresence } from "motion/react"
 
 export default function Home() {
 
@@ -31,6 +35,8 @@ export default function Home() {
     document.documentElement.classList.toggle('dark', selectedTheme === 'dark');
   };
 
+  const isLoading = useSelector((state: RootState) => state.isThingking.loading);
+
   return (
     <div>
       <div className="container mx-auto max-w-6xl px-4 pt-4 xl:pt-24 pb-4">
@@ -39,13 +45,42 @@ export default function Home() {
             <div className="sticky top-4 xl:top-24">
               <div className="bg-zinc-100 dark:bg-zinc-800 rounded-xl dark:shadow-lg dark:shadow-black/25 p-6">
                 <div className="flex items-center gap-1.5 mb-4">
-                  <div className="w-3 h-3 rounded-full bg-red-500" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                  <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse delay-150" />
+                  <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse delay-300" />
                 </div>
-                <div className="mx-auto relative bg-zinc-200 dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-32 h-32">
-                  <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12" />
-                </div>
+                <AnimatePresence mode="wait">
+                  <div className="h-32 w-32 mx-auto relative">
+                    {!isLoading &&
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+                        transition={{
+                          duration: 1,
+                          scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+                        }}
+                        className="relative bg-zinc-200 dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square"
+                      >
+                        <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12" />
+                      </motion.div>
+                    }
+                    {isLoading &&
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+                        transition={{
+                          duration: 1,
+                          scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+                        }}
+                        className="absolute inset-0 h-32 w-32"
+                      >
+                        <div className="mx-auto h-32 w-32 custom-loader" />
+                      </motion.div>
+                    }
+                  </div>
+                </AnimatePresence>
                 <h1 className="mt-4 dark:text-white text-lg text-center">Kadek Lanang Lanusa Putera</h1>
                 <p className="mb-8 text-sm text-center text-zinc-500 dark:text-zinc-300">lananglanusaputera@gmail.com</p>
                 <Button onClick={() => setLiveChat(!liveChat)} className="w-full mb-4">
@@ -88,12 +123,20 @@ export default function Home() {
           </div>
           <div className="basis-full relative bg-zinc-100 dark:bg-zinc-800 rounded-xl dark:shadow-lg shadow-black/25 px-2 md:px-6 pt-6 pb-2 md:pb-6">
             <div className="absolute top-6 start-6 flex items-center gap-1.5 mb-4">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
+              <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse delay-150" />
+              <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse delay-300" />
             </div>
             {!liveChat ? (
-              <div className="h-full px-4 md:px-0 pt-8">
+              <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  y: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+                }}
+                className="h-full px-4 md:px-0 pt-8"
+              >
                 <p className="mb-6 text-zinc-500 dark:text-zinc-300">I am a dedicated Frontend Developer with a strong foundation in HTML, CSS, and JavaScript, complemented by hands-on experience in frameworks like Next.js and React.js.</p>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
@@ -110,11 +153,11 @@ export default function Home() {
                           <td className="px-2">:</td>
                           <td className="">Lanang</td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <td className="text-zinc-500 dark:text-zinc-400">Date of Birth</td>
                           <td className="px-2">:</td>
                           <td className="">7 April 2003</td>
-                        </tr>
+                        </tr> */}
                         <tr>
                           <td className="text-zinc-500 dark:text-zinc-400">Age</td>
                           <td className="px-2">:</td>
@@ -177,11 +220,20 @@ export default function Home() {
                     </ul>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ) : (
               <div className="h-full pt-8">
                 <Button className="absolute top-4 right-6" size={'sm'} variant={'ghost'} onClick={() => setLiveChat(false)}><ArrowLeft />Manual Information</Button>
-                <Chatbot />
+                <motion.div
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.5,
+                    scale: { type: "spring", visualDuration: 0.4, bounce: 0.25 },
+                  }}
+                >
+                  <Chatbot />
+                </motion.div>
               </div>
             )}
           </div>

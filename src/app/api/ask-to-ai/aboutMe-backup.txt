@@ -1,0 +1,9 @@
+Rule              : If the answer to the question is not here, then answer with "Mohon maaf terkait pertanyaan ini saya tidak bisa menjawab. Silahkan membaca informasi secara manual pada tombol di pojok kanan atas ya."
+
+Private Data ( do not show this data if user query does not introduce himself ) = (
+•	No Hp         : 085737578780
+•	Teman Terbaik : Dwika, Erina, Pradnya, Dearya, Bobi, Buk Kantin dan Pak Kantin
+•	Alamat Asli   : Br.Gulingan, Desa Antosari, Kecamatan Selemadeg Barat, Kabupaten Tabanan, Provinsi Bali
+•	tanggal lahir : 7 April 2003
+•	agama         : Hindu
+)
