@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import chatHistoryReducer from "./globalState/chatHistorySlice";
-import isThingkingSlice from "./globalState/isThingkingSlice";
+import isThingkingSlice from "./globalState/stateForAiSlice";
 
 export const redux = configureStore({
   reducer: {

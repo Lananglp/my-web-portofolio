@@ -3,20 +3,20 @@
 // const TypingEffect = dynamic(() => import('@/components/TypingEffect'), { ssr: false });
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { LoaderCircle, MoveDown, Send, UserRound, X } from 'lucide-react';
+import { LoaderCircle, Maximize, Minimize, MoveDown, Send, UserRound, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './redux';
 import { addChatHistory } from './globalState/chatHistorySlice';
 import ChatbotSection from './ChatbotSection';
-import { setIsThingking } from './globalState/isThingkingSlice';
+import { setFullScreen, setIsThingking, setIsTyping } from './globalState/stateForAiSlice';
 
 export default function Chatbot() {
   const [userMessage, setUserMessage] = useState<string>('');
   const [chatResponse, setChatResponse] = useState<string>('');
   const [chatPrevious, setChatPrevious] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [isTyping, setIsTyping] = useState<boolean>(false);
+  // const [isTyping, setIsTyping] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [logError, setLogError] = useState<string>('');
@@ -25,13 +25,26 @@ export default function Chatbot() {
   const dispatch = useDispatch();
   const chatHistory = useSelector((state: RootState) => state.chatHistory.chat);
   const isLoading = useSelector((state: RootState) => state.isThingking.loading);
+  const fullScreen = useSelector((state: RootState) => state.isThingking.fullScreen);
 
   const handleAddHistory = (role: "user" | "model", parts: string) => {
     dispatch(addChatHistory({ role: role, parts: parts }));
   };
 
+  const handleProcessResponse = () => {
+    dispatch(setIsTyping({ isTyping: true }));
+  };
+
+  const toggleFullScreen = () => {
+    dispatch(setFullScreen({ fullScreen: !fullScreen }));
+    setTimeout(() => {
+      scrollToBottom();
+    }, 100);
+  };
+
   const handleSendMessage = async () => {
     if (!userMessage) return;
+    handleProcessResponse();
     setLoading(true);
     dispatch(setIsThingking({ loading: true }));
     setChatResponse(''); // Reset response
@@ -62,7 +75,7 @@ export default function Chatbot() {
       setLoading(false);
       dispatch(setIsThingking({ loading: false }));
       setChatPrevious(userMessage);
-      setIsTyping(false);
+      // setIsTyping(false);
       setUserMessage('');
       if (textareaRef.current) {
         textareaRef.current.blur();
@@ -113,33 +126,36 @@ export default function Chatbot() {
 
   return (
     <div className='h-full flex flex-col'>
-      <div className="flex-grow relative bg-zinc-200 dark:bg-zinc-900 rounded-lg">
+      <div className={`${fullScreen && 'pb-32'} flex-grow relative bg-zinc-200 dark:bg-zinc-900 rounded-lg`}>
         {!isAtBottom && (
           <div
             onClick={scrollToBottom}
-            className='absolute z-10 end-3 md:end-10 bottom-3 md:bottom-6 bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer'
+            className={`${fullScreen ? 'hidden' : 'absolute end-3 md:end-10 bottom-3 md:bottom-6'} z-10 backdrop-blur-sm bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer`}
           >
             <MoveDown className='h-4 w-4' />
           </div>
         )}
-        <div className='bg-zinc-200 dark:bg-zinc-800/50 rounded-t-lg shadow-lg shadow-black/5'>
+        <div className={`${fullScreen ? 'sticky top-4 bg-zinc-100/30 rounded-lg border border-zinc-300 dark:border-none' : 'bg-zinc-200 rounded-t-lg'} flex justify-between items-center backdrop-blur-sm dark:bg-zinc-800/50 shadow-lg shadow-black/5`}>
           <h2 className="px-4 py-2 dark:text-white"><div className='inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse mb-0.5 me-1' /> Live chat <span className='text-xs text-zinc-600 dark:text-zinc-400'>(Chat not be saved)</span></h2>
+          <Button onClick={toggleFullScreen} title={fullScreen ? 'Exit Full Screen' : 'Full Screen'} variant={'ghost'} className='hover:bg-transparent'>
+            {fullScreen ? <Minimize className='h-4 w-4' /> : <Maximize className='h-4 w-4' />}
+          </Button>
         </div>
         <ChatbotSection chatHistory={chatHistory} loading={loading} logError={logError} ref={chatContainerRef} />
       </div>
 
-      <div className='flex-none pt-2'>
+      <div className={`${fullScreen ? 'fixed start-1/2 -translate-x-1/2 bottom-6 w-full px-4 md:px-0 md:w-2/3' : 'flex-none pt-2'}`}>
         <div className='relative'>
           <Textarea
             ref={textareaRef}
             value={userMessage}
             onChange={(e) => setUserMessage(e.target.value)}
-            className='ps-4 py-4 pe-16'
+            className={`${fullScreen && 'bg-zinc-100/50 backdrop-blur-sm dark:bg-zinc-800 rounded-xl border-zinc-400/75 dark:border-zinc-700'} ps-4 py-4 pe-16`}
             placeholder="Ask something about me..."
             rows={2}
             disabled={loading}
-            onFocus={() => setIsTyping(true)}
-            onBlur={() => setIsTyping(false)}
+            // onFocus={() => setIsTyping(true)}
+            // onBlur={() => setIsTyping(false)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();

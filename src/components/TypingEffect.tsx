@@ -1,20 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-tomorrow.css';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/redux';
+import { setIsTyping } from '@/app/globalState/stateForAiSlice';
 
 type TypingEffectProps = {
     text: string;
     speed?: number;
+    alwaysActive?: boolean;
     onComplete?: () => void;
 };
 
 const parseText = (input: string) => {
     const blocks: (
         | string
-        | { type: 'code' | 'kbd' | 'bold' | 'table'; content: string; language?: string }
+        | { type: 'code' | 'kbd' | 'bold' | 'highlight' | 'table'; content: string; language?: string }
     )[] = [];
 
-    const regex = /```(\w+)?[\s\S]*?```|`([\s\S]*?)`|\*\*(.*?)\*\*|^(\s*\|[\s\S]*\|\s*)\n(\s*\|[-:| ]+\|\s*)\n(\s*\|[\s\S]*\|\s*)+/gm;
+    const regex = /```(\w+)?[\s\S]*?```|`([\s\S]*?)`|\*\*(.*?)\*\*|\*(.*?)\*|^(\s*\|[\s\S]*\|\s*)\n(\s*\|[-:| ]+\|\s*)\n(\s*\|[\s\S]*\|\s*)+/gm;
 
     let lastIndex = 0;
     let match;
@@ -34,6 +39,8 @@ const parseText = (input: string) => {
             blocks.push({ type: 'kbd', content: match[2] });
         } else if (match[3]) {
             blocks.push({ type: 'bold', content: match[3] });
+        } else if (match[4]) {
+            blocks.push({ type: 'highlight', content: match[4] });
         } else if (match[0]) {
             blocks.push({ type: 'table', content: match[0] });
         }
@@ -100,25 +107,31 @@ const RenderTable: React.FC<RenderTableProps> = ({ content }) => {
     );
 };
 
-const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed = 10, onComplete }) => {
+const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed = 10, alwaysActive = false, onComplete }) => {
     const [displayedText, setDisplayedText] = useState('');
     const [index, setIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
+    const isTyping = useSelector((state: RootState) => state.isThingking.isTyping);
+    const fullScreen = useSelector((state: RootState) => state.isThingking.fullScreen);
+    const isTypingProcess = alwaysActive || isTyping;
 
     useEffect(() => {
-        if (index < text.length) {
-            const timer = setTimeout(() => {
-                setDisplayedText((prev) => prev + text[index]);
-                setIndex((prev) => prev + 1);
-            }, speed);
+        if (isTypingProcess) {
+            if (index < text.length) {
+                const timer = setTimeout(() => {
+                    setDisplayedText((prev) => prev + text[index]);
+                    setIndex((prev) => prev + 1);
+                }, speed);
 
-            return () => clearTimeout(timer);
-        } else if (onComplete) {
-            onComplete();
+                return () => clearTimeout(timer);
+
+            } else if (onComplete) {
+                onComplete();
+            }
         }
-    }, [index, text, speed, onComplete]);
+    }, [index, text, speed, onComplete, isTypingProcess]);
 
-    const blocks = parseText(displayedText);
+    const blocks = parseText(isTypingProcess ? displayedText : text);
 
     useEffect(() => {
         Prism.highlightAll();
@@ -134,7 +147,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed = 10, onComplet
                         {block.content}
                     </kbd>
                 ) : block.type === 'code' ? (
-                    <div key={index} className="md:max-w-[65vh] relative pt-[1.26rem]">
+                    <div key={index} className={`${fullScreen ? 'md:max-w-[100vh]' : 'md:max-w-[65vh]'} relative pt-[1.26rem]`}>
                         <div className="absolute inset-x-0 top-0 bg-zinc-800 text-zinc-300 rounded-t-xl px-4 py-1">
                             <p className="text-sm">{block.language || 'plaintext'}</p>
                         </div>
@@ -144,10 +157,14 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed = 10, onComplet
                     </div>
                 ) : block.type === 'table' ? (
                     <RenderTable key={index} content={block.content} />
-                ) : (
+                ) : block.type === 'bold' ? (
                     <strong className="font-semibold text-lg dark:text-white" key={index}>
                         {block.content}
                     </strong>
+                ) : (
+                    <span className="text-blue-300" key={index}>
+                        {block.content}
+                    </span>
                 )
             )}
         </div>
@@ -156,173 +173,105 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed = 10, onComplet
 
 export default TypingEffect;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from 'react';
+// export default TypingEffect;
+// import React, { useState, useEffect, useRef } from 'react';
+// import * as motion from "motion/react-client"
+// import Prism from 'prismjs';
+// import 'prismjs/themes/prism-tomorrow.css';
 
 // type TypingEffectProps = {
-//   text: string;
-//   speed?: number;
-//   onComplete?: () => void;
-// };
-
-// const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed = 10, onComplete }) => {
-//   const [displayedText, setDisplayedText] = useState('');
-//   const [index, setIndex] = useState(0);
-
-//   useEffect(() => {
-//     if (index < text.length) {
-//       const timer = setTimeout(() => {
-//         setDisplayedText((prev) => prev + text[index]);
-//         setIndex((prev) => prev + 1);
-//       }, speed);
-
-//       return () => clearTimeout(timer);
-//     } else if (onComplete) {
-//       onComplete();
-//     }
-//   }, [index, text, speed, onComplete]);
-
-//   return <div className='whitespace-pre-wrap'>{displayedText}</div>;
-// };
-
-// export default TypingEffect;
-
-
-
-
-
-
-// =============================================================================================
-
-
-
-
-
-
-
-// 'use client';
-
-// import { useEffect, useRef, useState } from "react";
-// import 'prismjs/themes/prism-tomorrow.css';
-// import Prism from 'prismjs';
-// import 'prismjs/components/prism-javascript';
-// import 'prismjs/components/prism-markup';
-// import 'prismjs/components/prism-python';
-// import 'prismjs/components/prism-css';
-
-// function TypingEffect ({
-//     text,
-//     typingSpeed = 25,
-//     onFinish,
-// }: {
 //     text: string;
-//     typingSpeed?: number;
-//     onFinish?: () => void;
-// }) {
-//     const [typingText, setTypingText] = useState('');
-//     const [isTyping, setIsTyping] = useState(false);
+// };
+
+// const parseText = (input: string) => {
+//     const blocks: (
+//         | string
+//         | { type: 'code' | 'kbd' | 'bold' | 'highlight' | 'table'; content: string; language?: string }
+//     )[] = [];
+
+//     const regex = /```(\w+)?[\s\S]*?```|`([\s\S]*?)`|\*\*(.*?)\*\*|\*(.*?)\*|^(\s*\|[\s\S]*\|\s*)\n(\s*\|[-:| ]+\|\s*)\n(\s*\|[\s\S]*\|\s*)+/gm;
+
+//     let lastIndex = 0;
+//     let match;
+
+//     while ((match = regex.exec(input)) !== null) {
+//         if (match.index > lastIndex) {
+//             blocks.push(input.slice(lastIndex, match.index));
+//         }
+
+//         if (match[0].startsWith('```')) {
+//             const parts = match[0].split('\n');
+//             const firstLine = parts[0].replace(/```/g, '').trim();
+//             const language = firstLine || 'plaintext';
+//             const content = parts.slice(1, -1).join('\n');
+//             blocks.push({ type: 'code', content, language });
+//         } else if (match[2]) {
+//             blocks.push({ type: 'kbd', content: match[2] });
+//         } else if (match[3]) {
+//             blocks.push({ type: 'bold', content: match[3] });
+//         } else if (match[4]) {
+//             blocks.push({ type: 'highlight', content: match[4] });
+//         } else if (match[0]) {
+//             blocks.push({ type: 'table', content: match[0] });
+//         }
+
+//         lastIndex = regex.lastIndex;
+//     }
+
+//     if (lastIndex < input.length) {
+//         blocks.push(input.slice(lastIndex));
+//     }
+
+//     return blocks;
+// };
+
+// const TypingEffect: React.FC<TypingEffectProps> = ({ text }) => {
 //     const containerRef = useRef<HTMLDivElement>(null);
+//     const blocks = parseText(text);
 
-//     useEffect(() => {
-//         if (typeof window === 'undefined' || !text) return;
-
-//         setTypingText('');
-//         setIsTyping(true);
-
-//         let i = 0;
-
-//         const interval = setInterval(() => {
-//             setTypingText((prevText) => prevText + text.charAt(i));
-
-//             if (containerRef.current) {
-//                 containerRef.current.scrollTop = containerRef.current.scrollHeight;
-//             }
-
-//             i++;
-//             if (i >= text.length) {
-//                 clearInterval(interval);
-//                 setIsTyping(false);
-//                 if (onFinish) onFinish();
-//             }
-//         }, typingSpeed);
-
-//         setTypingText(text.charAt(0));
-
-//         return () => {
-//             clearInterval(interval);
-//         };
-//     }, [text, typingSpeed]);
-
-   
-//     const parseText = (input: string) => {
-//         const blocks: (string | { type: 'code' | 'kbd' | 'bold'; content: string })[] = [];
-//         const regex = /```([\s\S]*?)```|`([\s\S]*?)`|\*\*(.*?)\*\*/g;
-//         let lastIndex = 0;
-
-//         let match;
-//         while ((match = regex.exec(input)) !== null) {
-//             if (match.index > lastIndex) {
-//                 blocks.push(input.slice(lastIndex, match.index));
-//             }
-//             if (match[1]) {
-//                 blocks.push({ type: 'code', content: match[1] });
-//             }else if (match[2]) {
-//                 blocks.push({ type: 'kbd', content: match[2] });
-//             } else if (match[3]) {
-//                 blocks.push({ type: 'bold', content: match[2] });
-//             }
-//             lastIndex = regex.lastIndex;
-//         }
-//         if (lastIndex < input.length) {
-//             blocks.push(input.slice(lastIndex));
-//         }
-//         return blocks;
-//     };
-
-//     const blocks = parseText(typingText);
-
-   
 //     useEffect(() => {
 //         Prism.highlightAll();
 //     }, [blocks]);
 
 //     return (
-//         <div 
-//             ref={containerRef} 
-//             className="px-3 mt-2 whitespace-pre-wrap"
-//         >
+//         <div ref={containerRef} className="px-3 mt-2 whitespace-pre-wrap">
 //             {blocks.map((block, index) =>
 //                 typeof block === 'string' ? (
-//                     <span key={index}>{block}</span>
-//                 ) : block.type === 'kbd' ? (
-//                     <kbd key={index} className="inline-block text-sm bg-zinc-100 dark:bg-zinc-800 px-2 rounded-xl align-text-top">{block.content}</kbd>
-//                 ) : block.type === 'code' ? (
-//                     <pre
+//                     <motion.span
 //                         key={index}
-//                         className="bg-transparent p-3 rounded-xl text-sm max-w-[50vh] max-h-96"
+//                         initial={{ opacity: 0 }}
+//                         animate={{ opacity: 1 }}
+//                         transition={{ duration: 1, delay: index * 0.5 }}
 //                     >
-//                         <code className="language-html">{block.content}</code>
-//                     </pre>
+//                         {block}
+//                     </motion.span>
+//                 ) : block.type === 'kbd' ? (
+//                     <kbd key={index} className="inline-block text-sm bg-zinc-100 dark:bg-zinc-800 px-2 rounded-xl align-text-top">
+//                         {block.content}
+//                     </kbd>
+//                 ) : block.type === 'code' ? (
+//                     <motion.div
+//                         key={index}
+//                         className="md:max-w-[65vh] relative pt-[1.26rem]"
+//                         initial={{ opacity: 0 }}
+//                         animate={{ opacity: 1 }}
+//                         transition={{ duration: 1, delay: index * 0.5 }}
+//                     >
+//                         <div className="absolute inset-x-0 top-0 bg-zinc-800 text-zinc-300 rounded-t-xl px-4 py-1">
+//                             <p className="text-sm">{block.language || 'plaintext'}</p>
+//                         </div>
+//                         <pre className="bg-transparent p-3 rounded-b-xl text-sm">
+//                             <code className={`language-${block.language}`}>{block.content}</code>
+//                         </pre>
+//                     </motion.div>
+//                 ) : block.type === 'bold' ? (
+//                     <strong className="font-semibold text-lg dark:text-white" key={index}>
+//                         {block.content}
+//                     </strong>
 //                 ) : (
-//                     <strong className="font-semibold text-lg dark:text-white" key={index}>{block.content}</strong>
+//                     <span className="text-blue-300" key={index}>
+//                         {block.content}
+//                     </span>
 //                 )
 //             )}
 //         </div>

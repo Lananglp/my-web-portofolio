@@ -9,10 +9,10 @@ type TypingEffectProps = {
 const parseText = (input: string) => {
     const blocks: (
         | string
-        | { type: 'code' | 'kbd' | 'bold' | 'table'; content: string; language?: string }
+        | { type: 'code' | 'kbd' | 'bold' | 'highlight' | 'table'; content: string; language?: string }
     )[] = [];
 
-    const regex = /```(\w+)?[\s\S]*?```|`([\s\S]*?)`|\*\*(.*?)\*\*|^(\s*\|[\s\S]*\|\s*)\n(\s*\|[-:| ]+\|\s*)\n(\s*\|[\s\S]*\|\s*)+/gm;
+    const regex = /```(\w+)?[\s\S]*?```|`([\s\S]*?)`|\*\*(.*?)\*\*|\*(.*?)\*|^(\s*\|[\s\S]*\|\s*)\n(\s*\|[-:| ]+\|\s*)\n(\s*\|[\s\S]*\|\s*)+/gm;
 
     let lastIndex = 0;
     let match;
@@ -32,6 +32,8 @@ const parseText = (input: string) => {
             blocks.push({ type: 'kbd', content: match[2] });
         } else if (match[3]) {
             blocks.push({ type: 'bold', content: match[3] });
+        } else if (match[4]) {
+            blocks.push({ type: 'highlight', content: match[4] });
         } else if (match[0]) {
             blocks.push({ type: 'table', content: match[0] });
         }
@@ -65,8 +67,11 @@ const RenderTable: React.FC<RenderTableProps> = ({ content }) => {
 
     const { headers, bodyRows } = parseTable(content);
 
+    // if (headers.length === 0 || bodyRows.length === 0) {
+    //     return <p className="text-red-500">Invalid table format</p>;
+    // }
     if (headers.length === 0 || bodyRows.length === 0) {
-        return <p className="text-red-500">Invalid table format</p>;
+        return null;
     }
 
     return (
@@ -124,10 +129,14 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ text }) => {
                     </div>
                 ) : block.type === 'table' ? (
                     <RenderTable key={index} content={block.content} />
-                ) : (
+                ) : block.type === 'bold' ? (
                     <strong className="font-semibold text-lg dark:text-white" key={index}>
                         {block.content}
                     </strong>
+                ) : (
+                    <span className="text-blue-300" key={index}>
+                        {block.content}
+                    </span>
                 )
             )}
         </div>

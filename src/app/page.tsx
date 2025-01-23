@@ -1,10 +1,10 @@
 'use client'
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { ArrowBigLeft, ArrowLeft, Bot, MessageCircleMore, MessageCircleOff, UserRound, X } from "lucide-react";
+import { ArrowBigLeft, ArrowLeft, Bot, MessageCircleMore, MessageCircleOff, MoveDown, UserRound, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaGithub, FaInstagram, FaLinkedin, FaTelegram } from "react-icons/fa6";
 import Chatbot from "./Chatbot";
 import { Button } from "@/components/ui/button";
@@ -35,13 +35,61 @@ export default function Home() {
     document.documentElement.classList.toggle('dark', selectedTheme === 'dark');
   };
 
-  const isLoading = useSelector((state: RootState) => state.isThingking.loading);
+  // const isLoading = useSelector((state: RootState) => state.isThingking.loading);
+  const isTyping = useSelector((state: RootState) => state.isThingking.isTyping);
+  const fullScreen = useSelector((state: RootState) => state.isThingking.fullScreen);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+
+  const scrollToBottom = () => {
+    if (fullScreen && scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && fullScreen) {
+      scrollToBottom();
+    }
+  }, [fullScreen]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+        setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 5);
+      }
+    };
+
+    if (scrollRef.current) {
+      scrollRef.current.addEventListener("scroll", handleScroll);
+      handleScroll();
+    }
+
+    return () => {
+      if (scrollRef.current) {
+        scrollRef.current.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [fullScreen]);
 
   return (
-    <div>
-      <div className="container mx-auto max-w-6xl px-4 pt-4 xl:pt-24 pb-4">
+    <div ref={scrollRef} className="h-screen overflow-y-auto">
+      {fullScreen && !isAtBottom && (
+        <div
+          onClick={scrollToBottom}
+          className={`${fullScreen ? 'fixed start-1/2 -translate-x-1/2 bottom-28' : 'absolute end-3 md:end-10 bottom-3 md:bottom-6'} z-10 backdrop-blur-sm bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer`}
+        >
+          <MoveDown className='h-4 w-4' />
+        </div>
+      )}
+      <div className={`${fullScreen ? '' : 'px-4 pt-4 xl:pt-24 pb-4'} container mx-auto max-w-6xl`}>
         <div className="flex flex-col md:flex-row gap-4">
-          <div className={`${liveChat ? 'hidden md:block' : ''} basis-[32rem]`}>
+          <div className={`${fullScreen ? 'hidden' : liveChat ? 'hidden md:block' : ''} basis-[32rem]`}>
             <div className="sticky top-4 xl:top-24">
               <div className="bg-zinc-100 dark:bg-zinc-800 rounded-xl dark:shadow-lg dark:shadow-black/25 p-6">
                 <div className="flex items-center gap-1.5 mb-4">
@@ -51,7 +99,7 @@ export default function Home() {
                 </div>
                 <AnimatePresence mode="wait">
                   <div className="h-32 w-32 mx-auto relative">
-                    {!isLoading &&
+                    {!isTyping &&
                       <motion.div
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -65,7 +113,7 @@ export default function Home() {
                         <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12" />
                       </motion.div>
                     }
-                    {isLoading &&
+                    {isTyping &&
                       <motion.div
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -121,7 +169,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="basis-full relative bg-zinc-100 dark:bg-zinc-800 rounded-xl dark:shadow-lg shadow-black/25 px-2 md:px-6 pt-6 pb-2 md:pb-6">
+          <div className={`${fullScreen ? 'h-screen' : 'h-auto bg-zinc-100 dark:bg-zinc-800 dark:shadow-lg shadow-black/25'} basis-full relative rounded-xl px-2 md:px-6 pt-6 pb-2 md:pb-6`}>
             <div className="absolute top-6 start-6 flex items-center gap-1.5 mb-4">
               <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
               <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse delay-150" />
@@ -223,7 +271,7 @@ export default function Home() {
               </motion.div>
             ) : (
               <div className="h-full pt-8">
-                <Button className="absolute top-4 right-6" size={'sm'} variant={'ghost'} onClick={() => setLiveChat(false)}><ArrowLeft />Manual Information</Button>
+                <Button className={`${fullScreen && 'hidden'} absolute top-4 right-6`} size={'sm'} variant={'ghost'} onClick={() => setLiveChat(false)}><ArrowLeft />Manual Information</Button>
                 <motion.div
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -231,6 +279,7 @@ export default function Home() {
                     duration: 0.5,
                     scale: { type: "spring", visualDuration: 0.4, bounce: 0.25 },
                   }}
+                  className="h-full"
                 >
                   <Chatbot />
                 </motion.div>

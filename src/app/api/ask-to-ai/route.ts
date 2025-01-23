@@ -5,6 +5,8 @@ export async function POST(req: Request) {
   try {
 
     const aboutMe = `
+        Rule              : jawablah pertanyaan sesuai dengan bahasa user query, tidak harus menggunakan bahasa indonesia
+
         Nama Lengkap      : Kadek Lanang Lanusa Putera
         Nama Panggilan    : Lanang
         Email             : lananglanusaputera@gmail.com
@@ -59,7 +61,7 @@ export async function POST(req: Request) {
     const genAI = new GoogleGenerativeAI(apiKey);
     // const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     // const model = genAI.getGenerativeModel({  model: "gemini-2.0-flash-thinking-exp-01-21" });
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", systemInstruction: "You are a helpful assistant, Ensure that the response is in the same language as the user query" });
     
     const generationConfig = {
       temperature: 0.7,
@@ -76,8 +78,6 @@ export async function POST(req: Request) {
       Based on this information, please respond to the following user query in a way that reflects the personality and knowledge of this person:
 
       ${userMessage}
-
-      Ensure that the response is in the same language as the user query.
     `;
 
     // const result = await model.generateContent(prompt);
