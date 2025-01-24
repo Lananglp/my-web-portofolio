@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-tomorrow.css';
+import 'prismjs/components/prism-javascript.min.js';
+import 'prismjs/components/prism-typescript.min.js';
+import 'prismjs/components/prism-jsx.min.js';
+import 'prismjs/components/prism-tsx.min.js';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/redux';
 
 type TypingEffectProps = {
     text: string;
@@ -9,10 +15,10 @@ type TypingEffectProps = {
 const parseText = (input: string) => {
     const blocks: (
         | string
-        | { type: 'code' | 'kbd' | 'bold' | 'highlight' | 'table'; content: string; language?: string }
+        | { type: 'code' | 'kbd' | 'bold' | 'table'; content: string; language?: string }
     )[] = [];
 
-    const regex = /```(\w+)?[\s\S]*?```|`([\s\S]*?)`|\*\*(.*?)\*\*|\*(.*?)\*|^(\s*\|[\s\S]*\|\s*)\n(\s*\|[-:| ]+\|\s*)\n(\s*\|[\s\S]*\|\s*)+/gm;
+    const regex = /```(\w+)?[\s\S]*?```|`([\s\S]*?)`|\*\*(.*?)\*\*|^(\s*\|[\s\S]*\|\s*)\n(\s*\|[-:| ]+\|\s*)\n(\s*\|[\s\S]*\|\s*)+/gm;
 
     let lastIndex = 0;
     let match;
@@ -32,8 +38,6 @@ const parseText = (input: string) => {
             blocks.push({ type: 'kbd', content: match[2] });
         } else if (match[3]) {
             blocks.push({ type: 'bold', content: match[3] });
-        } else if (match[4]) {
-            blocks.push({ type: 'highlight', content: match[4] });
         } else if (match[0]) {
             blocks.push({ type: 'table', content: match[0] });
         }
@@ -101,7 +105,11 @@ const RenderTable: React.FC<RenderTableProps> = ({ content }) => {
 };
 
 const TypingEffect: React.FC<TypingEffectProps> = ({ text }) => {
+    const [displayedText, setDisplayedText] = useState('');
+    const [index, setIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
+    const isTyping = useSelector((state: RootState) => state.isThingking.isTyping);
+    const fullScreen = useSelector((state: RootState) => state.isThingking.fullScreen);
 
     const blocks = parseText(text);
 
@@ -119,7 +127,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ text }) => {
                         {block.content}
                     </kbd>
                 ) : block.type === 'code' ? (
-                    <div key={index} className="md:max-w-[65vh] relative pt-[1.26rem]">
+                    <div key={index} className={`${fullScreen ? 'md:max-w-[100vh]' : 'md:max-w-[65vh]'} relative pt-[1.2rem]`}>
                         <div className="absolute inset-x-0 top-0 bg-zinc-800 text-zinc-300 rounded-t-xl px-4 py-1">
                             <p className="text-sm">{block.language || 'plaintext'}</p>
                         </div>
@@ -129,14 +137,10 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ text }) => {
                     </div>
                 ) : block.type === 'table' ? (
                     <RenderTable key={index} content={block.content} />
-                ) : block.type === 'bold' ? (
-                    <strong className="font-semibold text-lg dark:text-white" key={index}>
+                ) : (
+                    <strong className="font-semibold dark:text-white" key={index}>
                         {block.content}
                     </strong>
-                ) : (
-                    <span className="text-blue-300" key={index}>
-                        {block.content}
-                    </span>
                 )
             )}
         </div>

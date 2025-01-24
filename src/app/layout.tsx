@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react"
 import ReduxProvider from "./ReduxProvider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -31,14 +32,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} antialiased`}
       >
         <ReduxProvider>
-          {children}
+          <ThemeProvider
+            attribute="class"
+            // defaultTheme="system"
+            defaultTheme="dark"
+            // enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
         </ReduxProvider>
-        <Analytics/>
+        <Analytics />
       </body>
     </html>
   );

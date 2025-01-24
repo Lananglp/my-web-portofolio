@@ -41,7 +41,7 @@ const ChatbotSection = forwardRef<HTMLDivElement, ChatbotSectionProps>((props, r
           <React.Fragment key={index}>
             {item.role === 'user' && (
               <div className='flex justify-end mb-3'>
-                <p className={`${fullScreen ? 'dark:bg-zinc-800/50' : 'dark:bg-zinc-800'} bg-zinc-100/30 w-3/4 md:w-1/2 border border-zinc-300 dark:border-none rounded-lg shadow-lg shadow-black/5 px-4 py-2 my-2`}>
+                <p className={`bg-zinc-100/30 dark:bg-zinc-900 w-3/4 md:w-1/2 border border-zinc-300 dark:border-none rounded-lg shadow-lg shadow-black/5 px-4 py-2 my-2`}>
                   {item.parts[0].text}
                 </p>
               </div>

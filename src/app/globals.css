@@ -17,7 +17,7 @@
 body {
   /* color: var(--foreground);
   background: var(--background); */
-  @apply bg-zinc-200 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300;
+  @apply bg-zinc-200 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300;
   font-family: var(--font-poppins);
 }
 
