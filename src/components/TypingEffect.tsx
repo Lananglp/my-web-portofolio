@@ -7,6 +7,7 @@ import 'prismjs/components/prism-jsx.min.js';
 import 'prismjs/components/prism-tsx.min.js';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/redux';
+import { usePathname } from 'next/navigation';
 
 type TypingEffectProps = {
     text: string;
@@ -82,28 +83,30 @@ const RenderTable: React.FC<RenderTableProps> = ({ content }) => {
     }
 
     return (
-        <table className="border-collapse border border-zinc-400 dark:border-zinc-700 w-full text-sm my-3">
-            <thead>
-                <tr className="bg-zinc-100 dark:bg-zinc-800 dark:text-white">
-                    {headers.map((header, i) => (
-                        <th key={i} className="border border-zinc-400 dark:border-zinc-700 px-4 py-2 text-left font-semibold">
-                            {header}
-                        </th>
-                    ))}
-                </tr>
-            </thead>
-            <tbody>
-                {bodyRows.map((row, i) => (
-                    <tr key={i}>
-                        {row.map((cell, j) => (
-                            <td key={j} className="border border-zinc-400 dark:border-zinc-700 px-4 py-2">
-                                {cell}
-                            </td>
+        <div className='w-full overflow-x-auto'>
+            <table className="border-collapse border border-zinc-400 dark:border-zinc-700 w-full text-sm my-3">
+                <thead>
+                    <tr className="bg-zinc-100 dark:bg-zinc-800 dark:text-white">
+                        {headers.map((header, i) => (
+                            <th key={i} className="border border-zinc-400 dark:border-zinc-700 px-4 py-2 text-left font-semibold">
+                                {header}
+                            </th>
                         ))}
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {bodyRows.map((row, i) => (
+                        <tr key={i}>
+                            {row.map((cell, j) => (
+                                <td key={j} className="border border-zinc-400 dark:border-zinc-700 px-4 py-2">
+                                    {cell}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     );
 };
 
@@ -112,7 +115,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed = 10, alwaysAct
     const [index, setIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const isTyping = useSelector((state: RootState) => state.isThingking.isTyping);
-    const fullScreen = useSelector((state: RootState) => state.isThingking.fullScreen);
+    const pathname = usePathname();
     const isTypingProcess = alwaysActive || isTyping;
 
     useEffect(() => {
@@ -147,7 +150,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ text, speed = 10, alwaysAct
                         {block.content}
                     </kbd>
                 ) : block.type === 'code' ? (
-                    <div key={index} className={`${fullScreen ? 'md:max-w-[100vh]' : 'md:max-w-[65vh]'} relative pt-[1.2rem]`}>
+                    <div key={index} className={`${pathname === '/chat' ? 'md:max-w-[100vh]' : 'md:max-w-[65vh]'} relative pt-[1.2rem]`}>
                         <div className="absolute inset-x-0 top-0 bg-zinc-800 text-zinc-300 rounded-t-xl px-4 py-1">
                             <p className="text-sm">{block.language || 'plaintext'}</p>
                         </div>

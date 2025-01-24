@@ -262,7 +262,7 @@ export default function Home() {
               </motion.div>
             ) : (
                 <div className="h-full pt-8">
-                  <Button className={`${fullScreen && 'hidden'} absolute top-4 right-6`} size={'sm'} variant={'ghost'} onClick={() => setLiveChat(false)}><ArrowLeft />Manual Information</Button>
+                  <Button className={`${fullScreen && 'hidden'} absolute top-4 right-6 hover:bg-transparent`} size={'sm'} variant={'ghost'} onClick={() => setLiveChat(false)}><ArrowLeft />Manual Information</Button>
                   <motion.div
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}

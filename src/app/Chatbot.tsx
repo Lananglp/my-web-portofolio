@@ -10,6 +10,7 @@ import { RootState } from './redux';
 import { addChatHistory } from './globalState/chatHistorySlice';
 import ChatbotSection from './ChatbotSection';
 import { setFullScreen, setIsThingking, setIsTyping } from './globalState/stateForAiSlice';
+import Link from 'next/link';
 
 type ChatbotProps = {
   scrollToBottomInFullScreen: () => void;
@@ -142,9 +143,9 @@ export default function Chatbot({ scrollToBottomInFullScreen }: ChatbotProps) {
         )}
         <div className={`${fullScreen ? 'sticky z-50 top-4 bg-zinc-100/30 rounded-lg border border-zinc-300 dark:border-none' : 'bg-zinc-200 rounded-t-lg'} flex justify-between items-center backdrop-blur-sm dark:bg-zinc-800 shadow-lg shadow-black/5`}>
           <h2 className="px-4 py-2 dark:text-white"><div className='inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse mb-0.5 me-1' /> Live chat <span className='text-xs text-zinc-600 dark:text-zinc-400'>(Chat not be saved)</span></h2>
-          <Button onClick={toggleFullScreen} title={fullScreen ? 'Exit Full Screen' : 'Full Screen'} variant={'ghost'} className='hover:bg-transparent'>
-            {fullScreen ? <Minimize className='h-4 w-4' /> : <Maximize className='h-4 w-4' />}
-          </Button>
+          <Link href={'/chat'} title='Full Screen' className='hover:bg-transparent hover:text-zinc-900 dark:hover:text-white px-4 p-2'>
+            <Maximize className='h-4 w-4' />
+          </Link>
         </div>
         <ChatbotSection chatHistory={chatHistory} loading={loading} logError={logError} ref={chatContainerRef} />
       </div>
