@@ -1,8 +1,7 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { NextResponse } from 'next/server';
+import { google } from '@ai-sdk/google';
+import { generateId, createDataStreamResponse, streamText, smoothStream } from 'ai';
 
 export async function POST(req: Request) {
-  try {
 
     const aboutMe = `
         Rule              : jawablah pertanyaan sesuai dengan bahasa user query, tidak harus menggunakan bahasa indonesia
@@ -48,55 +47,48 @@ export async function POST(req: Request) {
         •	Tools: Git
     `
 
-    const body = await req.json();
-    const { userMessage, chatHistory } = body;
+    const { messages } = await req.json();
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    // immediately start streaming (solves RAG issues with status, etc.)
+    return createDataStreamResponse({
+        execute: dataStream => {
+            dataStream.writeData('initialized call');
 
-    if (!apiKey) {
-    //   return res.status(500).json({ error: 'API key not found' });
-        return NextResponse.json({ error: 'API key not found' });
-    }
+            const result = streamText({
+                model: google('gemini-2.0-flash-exp'),
+                temperature: 0.7,
+                topP: 0.95,
+                topK: 64,
+                maxTokens: 65536,
+                messages,
+                experimental_transform: smoothStream(),
+                system: `
+                    You are a friendly human, your name is Lanang, here is information about you:
+                    ${aboutMe}
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    // const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    // const model = genAI.getGenerativeModel({  model: "gemini-2.0-flash-thinking-exp-01-21" });
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", systemInstruction: "You are a helpful assistant, Ensure that the response is in the same language as the user query" });
-    
-    const generationConfig = {
-      temperature: 0.7,
-      topP: 0.95,
-      topK: 64,
-      maxOutputTokens: 65536,
-      responseMimeType: "text/plain",
-    };
-    const prompt = `
-      I am an AI assistant that has been provided with information about a person. 
-      Here is some information about this person: 
-      ${aboutMe}
+                    Ensure that the response is in the same language as the user query and respond to the user in Markdown format.
+                `,
+                onChunk() {
+                    dataStream.writeMessageAnnotation({ chunk: '100' });
+                },
+                onFinish() {
+                    // message annotation:
+                    dataStream.writeMessageAnnotation({
+                        id: generateId(), // e.g. id from saved DB record
+                        other: 'information',
+                    });
 
-      Based on this information, please respond to the following user query in a way that reflects the personality and knowledge of this person:
+                    // call annotation:
+                    dataStream.writeData('call completed');
+                },
+            });
 
-      ${userMessage}
-    `;
-
-    // const result = await model.generateContent(prompt);
-
-    const chatSession = model.startChat({
-      generationConfig,
-      history: chatHistory,
-      // history: [
-      // ],
+            result.mergeIntoDataStream(dataStream);
+        },
+        onError: error => {
+            // Error messages are masked by default for security reasons.
+            // If you want to expose the error message to the client, you can do so here:
+            return error instanceof Error ? error.message : String(error);
+        },
     });
-
-    const result = await chatSession.sendMessage(prompt);
-    return NextResponse.json({ message: result.response.text() });
-
-    // return NextResponse.json({ message: result.response.text() });
-
-  } catch (error) {
-    console.error(error);
-    // res.status(500).json({ error: 'An error occurred' });
-    return NextResponse.json({ error: 'An error occurred' });
-  }
 }

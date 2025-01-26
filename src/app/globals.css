@@ -17,7 +17,7 @@
 body {
   /* color: var(--foreground);
   background: var(--background); */
-  @apply bg-zinc-200 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300;
+  @apply bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300;
   font-family: var(--font-poppins);
 }
 
@@ -116,5 +116,51 @@ body {
 @keyframes rotate {
   100% {
     transform: rotate(360deg)
+  }
+}
+
+.dot-loader {
+  border-radius: 50%;
+  position: relative;
+  animation: flash 0.5s ease-out infinite alternate;
+}
+
+@keyframes flash {
+  0% {
+    background-color: #FFF2;
+    box-shadow: 20px 0 #FFF2, -20px 0 #FFF;
+  }
+
+  50% {
+    background-color: #FFF;
+    box-shadow: 20px 0 #FFF2, -20px 0 #FFF2;
+  }
+
+  100% {
+    background-color: #FFF2;
+    box-shadow: 20px 0 #FFF, -20px 0 #FFF2;
+  }
+}
+
+.dot-loader-dark {
+  border-radius: 50%;
+  position: relative;
+  animation: flash-dark 0.5s ease-out infinite alternate;
+}
+
+@keyframes flash-dark {
+  0% {
+    background-color: #d4d4d8;
+    box-shadow: 20px 0 #d4d4d8, -20px 0 #3f3f46;
+  }
+
+  50% {
+    background-color: #3f3f46;
+    box-shadow: 20px 0 #d4d4d8, -20px 0 #d4d4d8;
+  }
+
+  100% {
+    background-color: #d4d4d8;
+    box-shadow: 20px 0 #3f3f46, -20px 0 #d4d4d8;
   }
 }

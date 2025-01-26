@@ -32,9 +32,13 @@ export default function Chatbot({ scrollToBottomInFullScreen }: ChatbotProps) {
   const isLoading = useSelector((state: RootState) => state.isThingking.loading);
   const fullScreen = useSelector((state: RootState) => state.isThingking.fullScreen);
 
-  const handleAddHistory = (role: "user" | "model", parts: string) => {
-    dispatch(addChatHistory({ role: role, parts: parts }));
+  const handleAddHistory = (role: "user" | "data" | "system" | "assistant", content: string) => {
+    dispatch(addChatHistory({ role: role, content: content }));
   };
+
+  // const handleAddHistory = (role: "user" | "model", parts: string) => {
+  //   dispatch(addChatHistory({ role: role, parts: parts }));
+  // };
 
   const handleProcessResponse = () => {
     dispatch(setIsTyping({ isTyping: true }));
@@ -68,7 +72,7 @@ export default function Chatbot({ scrollToBottomInFullScreen }: ChatbotProps) {
       const data = await response.json();
       if (data.message) {
         setChatResponse(data.message);
-        handleAddHistory("model", data.message);
+        handleAddHistory("assistant", data.message);
       } else {
         setChatResponse('No response from AI.');
         setLogError('No response from AI.');

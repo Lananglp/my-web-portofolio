@@ -1,8 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// export interface ChatMessage {
+//   role: "user" | "model";
+//   parts: { text: string }[];
+// }
+
 export interface ChatMessage {
-  role: "user" | "model";
-  parts: { text: string }[];
+  role: "user" | "data" | "system" | "assistant";
+  content: string;
 }
 
 interface ChatHistoryState {
@@ -17,10 +22,10 @@ const chatHistorySlice = createSlice({
   name: "chatHistory",
   initialState,
   reducers: {
-    addChatHistory: (state, action: PayloadAction<{ role: "user" | "model"; parts: string }>) => {
+    addChatHistory: (state, action: PayloadAction<{ role: "user" | "data" | "system" | "assistant"; content: string }>) => {
       state.chat.push({
         role: action.payload.role,
-        parts: [{ text: action.payload.parts }]
+        content: action.payload.content
       });
     },
     clearChatHistory: (state) => {

@@ -21,14 +21,14 @@ const ChatbotSection = forwardRef<HTMLDivElement, ChatbotSectionProps>((props, r
   const dispatch = useDispatch();
   const fullScreen = useSelector((state: RootState) => state.isThingking.fullScreen);
 
-  useEffect(() => {
-    if (chatHistory.length > 0) {
-      setLastMessageIndex(chatHistory.length - 1);
-      if (chatHistory[chatHistory.length - 1].role === 'model') {
-        setTypingEffectCompleted(true);
-      }
-    }
-  }, [chatHistory]);
+  // useEffect(() => {
+  //   if (chatHistory.length > 0) {
+  //     setLastMessageIndex(chatHistory.length - 1);
+  //     if (chatHistory[chatHistory.length - 1].role === 'model') {
+  //       setTypingEffectCompleted(true);
+  //     }
+  //   }
+  // }, [chatHistory]);
 
   const handleCompleteResponse = () => {
     dispatch(setIsTyping({ isTyping: false }));
@@ -42,11 +42,12 @@ const ChatbotSection = forwardRef<HTMLDivElement, ChatbotSectionProps>((props, r
             {item.role === 'user' && (
               <div className='flex justify-end mb-3'>
                 <p className={`bg-zinc-100/30 dark:bg-zinc-900 w-3/4 md:w-1/2 border border-zinc-300 dark:border-none rounded-lg shadow-lg shadow-black/5 px-4 py-2 my-2`}>
-                  {item.parts[0].text}
+                  {/* {item.parts[0].text} */}
+                  {item.content}
                 </p>
               </div>
             )}
-            {item.role === 'model' && (
+            {item.role === 'assistant' && (
               <div className='mb-3'>
                 <div className='flex items-center gap-1.5'>
                   <div className="relative bg-zinc-600 text-zinc-300 dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
@@ -61,9 +62,11 @@ const ChatbotSection = forwardRef<HTMLDivElement, ChatbotSectionProps>((props, r
                     <TypingNoEffect text={item.parts[0].text} />
                   )} */}
                   {index === lastMessageIndex ? (
-                    <TypingEffect text={item.parts[0].text} onComplete={handleCompleteResponse} />
+                    // <TypingEffect text={item.parts[0].text} onComplete={handleCompleteResponse} />
+                    <TypingEffect text={item.content} onComplete={handleCompleteResponse} />
                   ) : (
-                    <TypingNoEffect text={item.parts[0].text} />
+                    // <TypingNoEffect text={item.parts[0].text} />
+                    <TypingNoEffect text={item.content} />
                   )}
                 </div>
               </div>

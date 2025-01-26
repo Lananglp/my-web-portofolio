@@ -1,16 +1,15 @@
-Rule              : If the answer to the question is not here, then answer with "Mohon maaf terkait pertanyaan ini saya tidak bisa menjawab. Silahkan membaca informasi secara manual pada tombol di pojok kanan atas ya."
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { NextResponse } from 'next/server';
 
-Private Data ( do not show this data if user query does not introduce himself ) = (
-•	No Hp         : 085737578780
-•	Teman Terbaik : Dwika, Erina, Pradnya, Dearya, Bobi, Buk Kantin dan Pak Kantin
-•	Alamat Asli   : Br.Gulingan, Desa Antosari, Kecamatan Selemadeg Barat, Kabupaten Tabanan, Provinsi Bali
-•	tanggal lahir : 7 April 2003
-•	agama         : Hindu
-)
+export async function POST(req: Request) {
+  try {
 
+    const aboutMe = `
+        Rule              : jawablah pertanyaan sesuai dengan bahasa user query, tidak harus menggunakan bahasa indonesia
 
-
-
+        Nama Lengkap      : Kadek Lanang Lanusa Putera
+        Nama Panggilan    : Lanang
+        Email             : lananglanusaputera@gmail.com
         LinkedIn          : Lanang Lanusa Putera
         Github            : Lananglp
         Instagram         : @lananglanusa_
@@ -47,3 +46,70 @@ Private Data ( do not show this data if user query does not introduce himself ) 
         •	Framework: Next Js, Laravel, Node.js
         •	Database: MySQL, PostgreSQL
         •	Tools: Git
+    `
+
+    const body = await req.json();
+    const { userMessage, chatHistory } = body;
+
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+    //   return res.status(500).json({ error: 'API key not found' });
+        return NextResponse.json({ error: 'API key not found' });
+    }
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    // const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // const model = genAI.getGenerativeModel({  model: "gemini-2.0-flash-thinking-exp-01-21" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", systemInstruction: "You are a helpful assistant, Ensure that the response is in the same language as the user query" });
+    
+    const generationConfig = {
+      temperature: 0.7,
+      topP: 0.95,
+      topK: 64,
+      maxOutputTokens: 65536,
+      responseMimeType: "text/plain",
+    };
+    const prompt = `
+      I am an AI assistant that has been provided with information about a person. 
+      Here is some information about this person: 
+      ${aboutMe}
+
+      Based on this information, please respond to the following user query in a way that reflects the personality and knowledge of this person:
+
+      ${userMessage}
+    `;
+
+    // const result = await model.generateContent(prompt);
+
+    const chatSession = model.startChat({
+      generationConfig,
+      history: chatHistory,
+      // history: [
+      // ],
+    });
+
+    const result = await chatSession.sendMessage(prompt);
+    return NextResponse.json({ message: result.response.text() });
+
+    // const result = await chatSession.sendMessageStream(prompt);
+    // const readableStream = new ReadableStream({
+    //   async start(controller) {
+    //     for await (const chunk of result.stream) {
+    //       const chunkText = await chunk.text(); // Mengambil teks dari chunk
+    //       controller.enqueue(new TextEncoder().encode(chunkText));
+    //     }
+    //     controller.close(); // Tutup stream setelah selesai
+    //   },
+    // });
+
+    // return new NextResponse(readableStream, {
+    //   headers: { "Content-Type": "application/octet-stream" },
+    // });
+
+  } catch (error) {
+    console.error(error);
+    // res.status(500).json({ error: 'An error occurred' });
+    return NextResponse.json({ error: 'An error occurred' });
+  }
+}
