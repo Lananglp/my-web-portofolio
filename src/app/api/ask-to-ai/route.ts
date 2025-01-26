@@ -64,7 +64,10 @@ export async function POST(req: Request) {
                 // maxTokens: 65536,
                 maxTokens: 8192,
                 messages,
-                experimental_transform: smoothStream(),
+                experimental_transform: smoothStream({
+                    delayInMs: 60, // optional: defaults to 10ms
+                    chunking: 'word', // optional: defaults to 'word'
+                }),
                 system: `
                     You are a friendly human, your name is Lanang, here is information about you:
                     ${aboutMe}
