@@ -9,6 +9,8 @@ import * as motion from "motion/react-client"
 import { AnimatePresence } from "motion/react"
 import { ToggleThemeButton } from "@/components/ToggleThemeButton";
 import { useRouter } from "next/navigation";
+import { SparklesCore } from "@/components/ui/sparkles";
+import { Spotlight } from "@/components/ui/Spotlight-new";
 
 export default function Home() {
 
@@ -41,7 +43,22 @@ export default function Home() {
           }}
           className="dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative"
         >
-          <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-transparent [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"/>
+          <div className="hidden md:block w-full absolute z-0 pointer-events-none inset-0 h-screen">
+            <SparklesCore
+              id="tsparticlesfullpage"
+              background="transparent"
+              minSize={0.6}
+              speed={0.5}
+              maxSize={1.4}
+              particleDensity={10}
+              className="w-full h-full"
+              particleColor="#FFFFFF"
+            />
+          </div>
+          <div className='hidden lg:block fixed z-0 pointer-events-none inset-0 overflow-hidden'>
+            <Spotlight />
+          </div>
+          <div className="absolute z-0 pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-transparent [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"/>
 
           <div className="px-4 pt-4 xl:pt-24 pb-4 container mx-auto max-w-6xl">
             <div className="flex flex-col md:flex-row gap-4">

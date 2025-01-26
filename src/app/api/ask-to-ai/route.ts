@@ -56,10 +56,13 @@ export async function POST(req: Request) {
 
             const result = streamText({
                 model: google('gemini-2.0-flash-exp'),
-                temperature: 0.7,
+                // temperature: 0.7,
+                temperature: 1,
                 topP: 0.95,
-                topK: 64,
-                maxTokens: 65536,
+                // topK: 64,
+                topK: 40,
+                // maxTokens: 65536,
+                maxTokens: 8192,
                 messages,
                 experimental_transform: smoothStream(),
                 system: `

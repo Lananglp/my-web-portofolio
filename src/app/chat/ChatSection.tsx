@@ -18,7 +18,7 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
 
   return (
     <div ref={ref} className="h-full overflow-y-auto px-3 pt-2">
-      <div className='bg-yellow-500/20 rounded-xl p-6 my-3'>
+      <div className='bg-zinc-500/10 rounded-xl p-6 my-3'>
         <p><CircleAlert className='inline h-4 w-4 mb-0.5 me-2' />Your conversations will not be saved because Lanang is lazy about creating a database and backend.</p>
       </div>
       {messages.length > 0 ? (
@@ -26,7 +26,7 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
           <React.Fragment key={index}>
             {msg.role === 'user' && (
               <div className='flex justify-end mb-3'>
-                <p className={`bg-zinc-600 dark:bg-zinc-600/15 text-white dark:text-zinc-300 backdrop-blur-sm min-w-80 max-w-[calc(100%-8rem)] rounded-2xl shadow-lg shadow-black/5 px-4 md:px-6 py-2 md:py-4 my-2`}>
+                <p className={`whitespace-pre-wrap bg-zinc-600 dark:bg-zinc-600/15 text-white dark:text-zinc-300 backdrop-blur-sm min-w-80 max-w-[calc(100%-8rem)] rounded-2xl shadow-lg shadow-black/5 px-4 md:px-6 py-2 md:py-4 my-2`}>
                   {msg.content}
                 </p>
               </div>

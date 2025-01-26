@@ -14,9 +14,10 @@ import * as motion from "motion/react-client"
 import { AnimatePresence } from "motion/react"
 import { useRouter } from 'next/navigation';
 import { useChat } from 'ai/react';
+import { Spotlight } from '@/components/ui/Spotlight-new';
 
 function Chat() {
-    const { messages, input, handleSubmit, handleInputChange, isLoading } = useChat({
+    const { messages, input, handleSubmit, isLoading, setInput } = useChat({
         api: '/api/ask-to-ai'
     });
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -25,6 +26,7 @@ function Chat() {
     const [loading, setLoading] = useState<boolean>(false);
     const [isAtBottom, setIsAtBottom] = useState<boolean>(true);
     const [activePage, setActivePage] = useState<boolean>(true);
+    const [textareaHeight, setTextareaHeight] = useState<number>(0);
     const dispatch = useDispatch();
     const chatHistory = useSelector((state: RootState) => state.chatHistory.chat);
     const navigate = useRouter();
@@ -35,6 +37,25 @@ function Chat() {
             navigate.push('/');
         }, 250);
     }
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setInput(e.target.value);
+        adjustTextareaHeight();
+    };
+
+    const adjustTextareaHeight = () => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto"; // Reset height to recalculate
+            const maxHeight = 10 * parseFloat(getComputedStyle(textareaRef.current).lineHeight);
+            const newHeight = Math.min(textareaRef.current.scrollHeight, maxHeight);
+            textareaRef.current.style.height = `${newHeight}px`;
+            setTextareaHeight(newHeight);
+        }
+    };
+
+    useEffect(() => {
+        adjustTextareaHeight();
+    }, [input]);
 
     const handleSendMessage = async (e?: React.FormEvent<HTMLFormElement>) => {
         if (!input.trim()) return;
@@ -142,13 +163,18 @@ function Chat() {
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            // Pastikan textarea tidak dalam fokus sebelum memberi fokus
+            // Cek apakah textareaRef ada dan tidak dalam keadaan fokus
             if (
                 textareaRef.current &&
-                document.activeElement !== textareaRef.current &&
-                event.key.length === 1 // Pastikan hanya huruf/angka yang ditekan, bukan tombol fungsi (Shift, Ctrl, dll)
+                document.activeElement !== textareaRef.current
             ) {
-                textareaRef.current.focus();
+                // Pastikan tidak ada modifier key seperti Ctrl, Alt, atau Meta yang ditekan
+                if (!event.ctrlKey && !event.altKey && !event.metaKey) {
+                    // Cek apakah key yang ditekan adalah huruf atau angka saja
+                    if (/^[a-zA-Z0-9]$/.test(event.key)) {
+                        textareaRef.current.focus();
+                    }
+                }
             }
         };
 
@@ -157,6 +183,21 @@ function Chat() {
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
+    }, []);
+
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        // Cek apakah user menggunakan perangkat mobile berdasarkan user agent
+        const checkMobileDevice = () => {
+            const userAgent = navigator.userAgent || navigator.vendor;
+            if (/android|iphone|ipad|ipod/i.test(userAgent)) {
+                setIsMobile(true);
+            } else {
+                setIsMobile(false);
+            }
+        };
+        checkMobileDevice();
     }, []);
 
     return (
@@ -175,6 +216,9 @@ function Chat() {
                         bounce: 0.1
                     }}
                 >
+                    <div className='hidden lg:block fixed z-0 inset-0 overflow-hidden'>
+                        <Spotlight />
+                    </div>
                     <div className="fixed z-0 pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-transparent [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"/>
 
                     <div className='sticky z-20 top-0 flex justify-between items-center backdrop-blur-sm border-b px-4 py-3'>
@@ -189,9 +233,9 @@ function Chat() {
                                     <ChatSection messages={messages} loading={isLoading} logError={logError} />
                                 </div>
 
-                                <div className="sticky z-20 inset-x-0 bottom-4 md:bottom-6 px-4 md:px-0">
+                                <div className="sticky z-30 inset-x-0 bottom-4 md:bottom-6 px-4 md:px-0">
                                     {!isAtBottom &&
-                                        <div onClick={scrollToBottom} className="absolute start-1/2 -translate-x-1/2 bottom-28 z-20 backdrop-blur-sm bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer">
+                                        <div onClick={scrollToBottom} style={{ bottom: `${textareaHeight + 14}px` }} className="absolute start-1/2 -translate-x-1/2 z-10 backdrop-blur-sm bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer">
                                             <MoveDown className='h-4 w-4' />
                                         </div>
                                     }
@@ -205,7 +249,7 @@ function Chat() {
                                             rows={2}
                                             // disabled={isLoading}
                                             onKeyDown={(e) => {
-                                                if (e.key === 'Enter' && !e.shiftKey) {
+                                                if (!isMobile && e.key === 'Enter' && !e.shiftKey) {
                                                     e.preventDefault();
                                                     handleSendMessage();
                                                 }
@@ -214,7 +258,7 @@ function Chat() {
                                         <Button
                                             type="submit"
                                             disabled={isLoading}
-                                            className="absolute top-4 right-4 rounded-full w-10 h-10 disabled:opacity-50"
+                                            className="absolute bottom-4 right-4 rounded-full w-10 h-10 disabled:opacity-50"
                                         >
                                             {isLoading ? (
                                                 <LoaderCircle className="animate-spin" />
@@ -229,7 +273,7 @@ function Chat() {
                     ) : (
                         <div className='h-[calc(100%-3.8rem)] flex justify-center items-center text-center'>
                             <div className='px-4'>
-                                <motion.h1
+                                <motion.div
                                     initial={{ opacity: 0, y: 50 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{
@@ -239,10 +283,15 @@ function Chat() {
                                         visualDuration: 0.4,
                                         bounce: 0.7
                                     }}
-                                    className='mb-8 font-medium text-3xl'
                                 >
-                                    hello, is there anything you want to ask me?
-                                </motion.h1>
+                                    <div className="flex justify-center items-center gap-1.5 mb-4">
+                                        <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+                                        <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse delay-150" />
+                                        <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse delay-300" />
+                                    </div>
+
+                                    <h1 className='mb-8 font-medium text-2xl md:text-3xl'>hello, is there anything you want to ask me?</h1>
+                                </motion.div>
                                 <motion.form
                                     initial={{ opacity: 0, y: 50 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -264,7 +313,7 @@ function Chat() {
                                         rows={2}
                                         // disabled={isLoading}
                                         onKeyDown={(e) => {
-                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                            if (!isMobile && e.key === 'Enter' && !e.shiftKey) {
                                                 e.preventDefault();
                                                 handleSendMessage();
                                             }
@@ -273,7 +322,7 @@ function Chat() {
                                     <Button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="absolute top-4 right-4 rounded-full w-10 h-10 disabled:opacity-50"
+                                        className="absolute bottom-4 right-4 rounded-full w-10 h-10 disabled:opacity-50"
                                     >
                                         {isLoading ? (
                                             <LoaderCircle className="animate-spin" />

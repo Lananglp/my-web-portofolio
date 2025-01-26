@@ -7,6 +7,7 @@ import 'prismjs/components/prism-javascript.min.js';
 import 'prismjs/components/prism-typescript.min.js';
 import 'prismjs/components/prism-jsx.min.js';
 import 'prismjs/components/prism-tsx.min.js';
+import { img } from "motion/react-client";
 
 export const NonMemoizedMarkdown = ({ children }: { children: string }) => {
 
@@ -21,7 +22,7 @@ export const NonMemoizedMarkdown = ({ children }: { children: string }) => {
         <div className="mb-6">
             <pre
                 {...props}
-                className={`${className} text-sm w-[80dvw] md:max-w-[500px] overflow-x-scroll bg-zinc-100 p-2 rounded mt-2 dark:bg-zinc-800`}
+                className={`${className} text-sm w-[80dvw] md:max-w-[500px] overflow-x-scroll bg-zinc-100 p-2 rounded-xl mt-2 dark:bg-zinc-800`}
             >
                 <code className={match[1]}>{children}</code>
             </pre>
@@ -168,6 +169,16 @@ export const NonMemoizedMarkdown = ({ children }: { children: string }) => {
         <a target="_blank" className="hover:text-blue-500 underline underline-offset-4 transition-colors duration-200" {...props}>
           {children}
         </a>
+      );
+    },
+    img: ({ node, src, alt, ...props }: any) => {
+      return (
+        <img
+          className="mb-6 w-1/2 md:w-1/3 aspect-square object-cover bg-zinc-950/10 dark:bg-white/10 rounded-lg"
+          src={src}
+          alt={alt}
+          {...props}
+        />
       );
     },
   };
