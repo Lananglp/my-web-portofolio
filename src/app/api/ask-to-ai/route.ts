@@ -62,7 +62,7 @@ export async function POST(req: Request) {
                 // topK: 64,
                 topK: 40,
                 // maxTokens: 65536,
-                maxTokens: 8192,
+                // maxTokens: 8192,
                 messages,
                 experimental_transform: smoothStream({
                     delayInMs: 60, // optional: defaults to 10ms

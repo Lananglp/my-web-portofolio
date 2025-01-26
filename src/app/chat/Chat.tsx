@@ -272,7 +272,7 @@ function Chat() {
                         </div>
                     ) : (
                         <div className='h-[calc(100%-3.8rem)] flex justify-center items-center text-center'>
-                            <div className='px-4'>
+                            <div className='px-4 max-w-4xl'>
                                 <motion.div
                                     initial={{ opacity: 0, y: 50 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -345,6 +345,27 @@ function Chat() {
                                 >
                                     <CircleAlert className='inline h-4 w-4 mb-0.5 me-0.5 text-orange-400' /> The message will not be saved.
                                 </motion.p>
+                                <div className='mt-20'>
+                                    <h2 className='mb-4'>What kind of response will you get?</h2>
+                                    <div className='grid grid-cols-2 md:grid-cols-4 gap-2'>
+                                        <div className='bg-zinc-200/50 dark:bg-zinc-800/50 p-3 rounded-lg text-start'>
+                                            <h3 className='mb-2 dark:text-white text-sm font-semibold'>Code</h3>
+                                            <p className='text-xs'>Provide code in various programming languages ​​according to your needs.</p>
+                                        </div>
+                                        <div className='bg-zinc-200/50 dark:bg-zinc-800/50 p-3 rounded-lg text-start'>
+                                            <h3 className='mb-2 dark:text-white text-sm font-semibold'>Table</h3>
+                                            <p className='text-xs'>Provides data in a neat, easy-to-read tabular format, suitable for comparison or data analysis.</p>
+                                        </div>
+                                        <div className='bg-zinc-200/50 dark:bg-zinc-800/50 p-3 rounded-lg text-start'>
+                                            <h3 className='mb-2 dark:text-white text-sm font-semibold'>Information</h3>
+                                            <p className='text-xs'>Providing details about myself, as you can see on my profile.</p>
+                                        </div>
+                                        <div className='bg-zinc-200/50 dark:bg-zinc-800/50 p-3 rounded-lg text-start'>
+                                            <h3 className='mb-2 dark:text-white text-sm font-semibold'>knowledge</h3>
+                                            <p className='text-xs'>Provide information on various topics, from technology to other general matters.</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
