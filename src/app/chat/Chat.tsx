@@ -16,9 +16,25 @@ import { useChat } from 'ai/react';
 import { Spotlight } from '@/components/ui/Spotlight-new';
 import ChatHome from './ChatHome';
 
+interface MessagesType {
+    role: "user" | "data" | "system" | "assistant";
+    content: string;
+}
+
 function Chat() {
     const { messages, input, handleSubmit, isLoading, setInput, error, reload, stop } = useChat({
-        api: '/api/ask-to-ai'
+        api: '/api/ask-to-ai',
+        onFinish: (message, { usage, finishReason }) => {
+            // console.log('Finished streaming message:', message);
+            // console.log('Token usage:', usage);
+            // console.log('Finish reason:', finishReason);
+        },
+        onError: error => {
+            // console.error('An error occurred:', error);
+        },
+        onResponse: response => {
+            // console.log('Received HTTP response from server:', response);
+        },        
     });
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
