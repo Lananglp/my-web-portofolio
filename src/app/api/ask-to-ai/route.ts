@@ -1,5 +1,5 @@
 import { google } from '@ai-sdk/google';
-import { smoothStream, streamText } from 'ai';
+import { streamText } from 'ai';
 
 export async function POST(req: Request) {
 
@@ -58,7 +58,6 @@ export async function POST(req: Request) {
 
             Ensure that the response is in the same language as the user query.
         `,
-        experimental_transform: smoothStream({ delayInMs: 30 }),
     });
 
     return result.toDataStreamResponse();
