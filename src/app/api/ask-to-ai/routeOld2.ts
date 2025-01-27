@@ -1,5 +1,5 @@
 import { google } from '@ai-sdk/google';
-import { smoothStream, streamText } from 'ai';
+import { generateId, createDataStreamResponse, streamText, smoothStream } from 'ai';
 
 export async function POST(req: Request) {
 
@@ -51,15 +51,62 @@ export async function POST(req: Request) {
 
     const result = streamText({
         model: google('gemini-2.0-flash-exp'),
+        temperature: 0.7,
+        topP: 0.95,
+        topK: 64,
+        maxTokens: 512,
         messages,
+        // experimental_transform: smoothStream({ delayInMs: 30, chunking: 'line' }),
         system: `
             You are a friendly human, your name is Lanang, here is information about you:
             ${aboutMe}
 
-            Ensure that the response is in the same language as the user query.
+            Ensure that the response is in the same language as the user query and respond to the user in Markdown format.
         `,
-        experimental_transform: smoothStream({ delayInMs: 30 }),
     });
 
     return result.toDataStreamResponse();
+
+    // immediately start streaming (solves RAG issues with status, etc.)
+    // return createDataStreamResponse({
+    //     execute: dataStream => {
+    //         dataStream.writeData('initialized call');
+
+    //         const result = streamText({
+    //             model: google('gemini-2.0-flash-exp'),
+    //             temperature: 0.7,
+    //             topP: 0.95,
+    //             topK: 64,
+    //             maxTokens: 512,
+    //             messages,
+    //             experimental_transform: smoothStream({ delayInMs: 30, chunking: 'line' }),
+    //             system: `
+    //                 You are a friendly human, your name is Lanang, here is information about you:
+    //                 ${aboutMe}
+
+    //                 Ensure that the response is in the same language as the user query and respond to the user in Markdown format.
+    //             `,
+    //             onChunk() {
+    //                 dataStream.writeMessageAnnotation({ chunk: '100' });
+    //             },
+    //             onFinish() {
+    //                 // message annotation:
+    //                 dataStream.writeMessageAnnotation({
+    //                     id: generateId(), // e.g. id from saved DB record
+    //                     other: 'information',
+    //                 });
+
+    //                 // call annotation:
+    //                 dataStream.writeData('call completed');
+    //             },
+    //         });
+
+    //         result.mergeIntoDataStream(dataStream);
+    //     },
+    //     onError: error => {
+    //         // Error messages are masked by default for security reasons.
+    //         // If you want to expose the error message to the client, you can do so here:
+    //         return error instanceof Error ? error.message : String(error);
+    //     },
+    // });
 }

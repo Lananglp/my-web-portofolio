@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:wifi": "next dev --turbopack -H 192.168.103.52",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

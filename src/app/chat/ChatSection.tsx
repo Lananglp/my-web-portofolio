@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { CircleAlert, UserRound, X } from 'lucide-react';
+import { CircleAlert, Cog, UserRound, X } from 'lucide-react';
 import { Markdown } from '@/components/Markdown';
 
 interface MessagesType {
@@ -10,15 +10,17 @@ interface MessagesType {
 interface ChatSectionProps {
   messages: MessagesType[];
   loading: boolean;
-  logError: string;
+  error: Error | undefined;
+  reload: () => void;
+  stop: () => void;
 }
 
 const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) => {
-  const { messages, loading, logError } = props;
+  const { messages, loading, error, reload, stop } = props;
 
   return (
-    <div ref={ref} className="h-full overflow-y-auto px-3 pt-2">
-      <div className='bg-zinc-500/10 rounded-xl p-6 my-3'>
+    <div ref={ref} className="h-full mx-auto max-w-3xl px-3 pt-2">
+      <div className='bg-zinc-500/10 rounded-xl p-6 my-3 text-sm'>
         <p><CircleAlert className='inline h-4 w-4 mb-0.5 me-2' />Your conversations will not be saved because Lanang is lazy about creating a database and backend.</p>
       </div>
       {messages.length > 0 ? (
@@ -67,18 +69,20 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
           </div>
         </div>
       ) : (
-        logError && (
+        error && (
           <div>
             <div className='flex items-center gap-1.5'>
               <div className="relative bg-white dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
-                <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
+                <Cog className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
               </div>
-              <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
+              <h6 className='font-semibold dark:font-normal dark:text-white'>System</h6>
             </div>
-            <p className='px-3 mt-2'>
-              <X className='inline text-red-500 h-5 w-5 mb-0.5 me-1' />
-              {logError}
-            </p>
+            <div className='px-3 mt-2'>
+              <p className='mb-3'>
+                <X className='inline text-red-500 h-5 w-5 mb-0.5 me-1' />
+                {error.message}
+              </p>
+            </div>
           </div>
         )
       )}
