@@ -164,3 +164,109 @@ body {
     box-shadow: 20px 0 #3f3f46, -20px 0 #d4d4d8;
   }
 }
+
+
+
+.loader-awesome {
+  width: 2em;
+  height: 2em;
+  background: linear-gradient(-45deg, #fc00ff 0%, #00dbde 100% );
+  animation: spinAwesome 5s infinite;
+  border-radius: 6%;
+}
+
+.loader-awesome::before {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(-45deg, #fc00ff 0%, #00dbde 100% );
+  transform: translate3d(0, 0, 0) scale(0.95);
+  filter: blur(20px);
+}
+
+@keyframes spinAwesome {
+  0% {
+    transform: rotate(-45deg);
+  }
+
+  50% {
+    transform: rotate(-360deg);
+    border-radius: 50%;
+  }
+
+  100% {
+    transform: rotate(-45deg);
+  }
+}
+
+
+
+
+/* From Uiverse.io by Ashon-G */
+.star {
+  margin: auto;
+  width: 16em;
+  height: 16em;
+}
+
+.star__stroke {
+  --dur: 3s;
+  animation: stroke1 var(--dur) linear infinite;
+}
+
+.star__stroke--2 {
+  animation-name: stroke2;
+  animation-delay: calc(var(--dur) / -2);
+}
+
+.star__stroke--3 {
+  animation-name: stroke3;
+  animation-direction: reverse;
+}
+
+.star__stroke--4 {
+  animation-name: stroke4;
+  animation-delay: calc(var(--dur) / -2);
+  animation-direction: reverse;
+}
+
+@keyframes stroke1 {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: 124;
+  }
+}
+
+@keyframes stroke2 {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: 248;
+  }
+}
+
+@keyframes stroke3 {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: 372;
+  }
+}
+
+@keyframes stroke4 {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: 496;
+  }
+}

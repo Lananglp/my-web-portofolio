@@ -43,14 +43,14 @@ export default function Home() {
           }}
           className="dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative"
         >
-          <div className="hidden md:block w-full absolute z-0 pointer-events-none inset-0 h-screen">
+          <div className="hidden dark:block w-full fixed z-0 pointer-events-none inset-0 h-screen">
             <SparklesCore
               id="tsparticlesfullpage"
               background="transparent"
               minSize={0.6}
-              speed={0.5}
+              speed={1}
               maxSize={1.4}
-              particleDensity={10}
+              particleDensity={50}
               className="w-full h-full"
               particleColor="#FFFFFF"
             />
@@ -64,7 +64,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row gap-4">
               <div className="block basis-[32rem]">
                 <div className="md:sticky top-4 xl:top-24">
-                  <div className="bg-transparent backdrop-blur-sm dark:backdrop-blur-none md:border dark:border-zinc-800 rounded-xl md:p-6">
+                  <div className="bg-transparent md:border dark:border-zinc-800 rounded-xl md:p-6">
                     <div className="flex items-center gap-1.5 mb-4">
                       <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
                       <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse delay-150" />
@@ -123,7 +123,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="h-auto bg-transparent backdrop-blur-sm dark:backdrop-blur-none md:border dark:border-zinc-800 basis-full rounded-xl md:px-6 md:py-6">
+              <div className="h-auto bg-transparent md:border dark:border-zinc-800 basis-full rounded-xl md:px-6 md:py-6">
                 <div className="flex items-center gap-1.5 mb-4">
                   <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse delay-150" />
