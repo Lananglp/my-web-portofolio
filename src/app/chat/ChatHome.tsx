@@ -59,12 +59,12 @@ function ChatHome({ handleSendMessage, textareaRef, input, handleInputChange, is
                 }}
             >
                 <div className="flex md:justify-center items-center gap-1.5 mt-12 mb-4">
-                    <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse delay-150" />
-                    <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse delay-300" />
+                    <div className="w-3 h-3 rounded-full bg-zinc-500 animate-pulse" />
+                    <div className="w-3 h-3 rounded-full bg-zinc-600 animate-pulse delay-150" />
+                    <div className="w-3 h-3 rounded-full bg-zinc-700 animate-pulse delay-300" />
                 </div>
 
-                <h1 className='mb-8 font-medium text-xl md:text-3xl dark:text-white'><span className='text-6xl md:text-3xl md:font-semibold bg-gradient-to-r bg-clip-text text-transparent from-red-500 to-green-500'>Hello</span>, is there anything you want to ask me?</h1>
+                <h1 className='mb-8 font-medium text-xl md:text-3xl md:text-white'><span className='text-6xl md:text-3xl font-semibold md:font-medium bg-gradient-to-b bg-clip-text text-transparent md:text-white from-white to-transparent'>Hello</span>, is there anything you want to ask me?</h1>
             </motion.div>
             <motion.form
                 initial={{ opacity: 0, y: 50 }}
