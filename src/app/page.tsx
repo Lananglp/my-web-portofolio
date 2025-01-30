@@ -78,6 +78,7 @@ export default function Home() {
                         exit={{ opacity: 0, scale: 0 }}
                         transition={{
                           duration: 1,
+                          delay: 0.5,
                           scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
                         }}
                         className="relative bg-zinc-200/50 dark:bg-zinc-800 text-zinc-500 rounded-full aspect-square"
@@ -85,56 +86,58 @@ export default function Home() {
                         <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12" />
                       </motion.div>
                     </div>
-                    <h1 className="mt-4 dark:text-white text-lg text-center">Kadek Lanang Lanusa Putera</h1>
-                    <p className="mb-8 text-sm text-center text-zinc-500 dark:text-zinc-300">lananglanusaputera@gmail.com</p>
-                    <Button onClick={goToChat} className="w-full mb-4">
-                      <MessageCircleMore className="mb-0.5" />
-                      Live Chat
-                    </Button>
-                    <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Social Media</h6>
+                    <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.6, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="mt-4 dark:text-white text-lg text-center">Kadek Lanang Lanusa Putera</motion.h1>
+                    <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.7, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="mb-8 text-sm text-center text-zinc-500 dark:text-zinc-300">lananglanusaputera@gmail.com</motion.p>
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.8, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="w-full mb-4">
+                      <Button onClick={goToChat} className="w-full">
+                        <MessageCircleMore className="mb-0.5" />
+                        Live Chat
+                      </Button>
+                    </motion.div>
+                    <motion.h6 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.9, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Social Media</motion.h6>
                     <ul className="flex flex-wrap items-center gap-2">
-                      <li>
+                      <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1, type: 'spring', visualDuration: 0.3, bounce: 0.6 }}>
                         <Link href="https://github.com/Lananglp" target="_blank" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
                           <FaGithub className="inline text-2xl mb-0.5 me-2" />
                           Lananglp
                         </Link>
-                      </li>
-                      <li>
+                      </motion.li>
+                      <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1.1, type: 'spring', visualDuration: 0.3, bounce: 0.6 }}>
                         <Link href="https://www.linkedin.com/in/lanang-lanusa-putera-70b6422a8/" target="_blank" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
                           <FaLinkedin className="inline text-2xl mb-0.5 me-2" />
                           Lanang Lanusa
                         </Link>
-                      </li>
-                      <li>
+                      </motion.li>
+                      <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1.2, type: 'spring', visualDuration: 0.3, bounce: 0.6 }}>
                         <Link href="https://www.instagram.com/lananglanusa/" target="_blank" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
                           <FaInstagram className="inline text-2xl mb-0.5 me-2" />
                           lananglanusa_
                         </Link>
-                      </li>
-                      <li>
+                      </motion.li>
+                      <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }}>
                         <Link href="https://web.facebook.com/profile.php?id=100006398402999" target="_blank" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
                           <FaFacebook className="inline text-2xl mb-0.5 me-2" />
                           Kadek Lanang
                         </Link>
-                      </li>
-                      <li>
+                      </motion.li>
+                      <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1.4, type: 'spring', visualDuration: 0.3, bounce: 0.6 }}>
                         <Link href="https://www.tiktok.com/@lananglanusa" target="_blank" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
                           <FaTiktok className="inline text-2xl mb-0.5 me-2" />
                           Lanang Lanusa
                         </Link>
-                      </li>
-                      <li>
+                      </motion.li>
+                      <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1.5, type: 'spring', visualDuration: 0.3, bounce: 0.6 }}>
                         <Link href="https://www.youtube.com/@lananglanusa/videos" target="_blank" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
                           <FaYoutube className="inline text-2xl mb-0.5 me-2" />
                           Lanang Lanusa
                         </Link>
-                      </li>
-                      {/* <li>
+                      </motion.li>
+                      {/* <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1.6, type: 'spring', visualDuration: 0.3, bounce: 0.6 }}>
                         <Link href="/about" target="_blank" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
                           <FaTelegram className="inline text-2xl mb-0.5 me-2" />
                           Lanang Lanusa
                         </Link>
-                      </li> */}
+                      </motion.li> */}
                     </ul>
                   </div>
                   <div className="mt-3">
@@ -153,16 +156,17 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
                     duration: 0.5,
+                    delay: 0.5,
                     y: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
                   }}
                   className="h-full"
                 >
                   {/* <p className="mb-6 text-zinc-500 dark:text-zinc-300">I am a dedicated Frontend Developer with a strong foundation in HTML, CSS, and JavaScript, complemented by hands-on experience in frameworks like Next.js and React.js.</p> */}
-                  <p className="mb-6 text-zinc-500 dark:text-zinc-300">I am an Informatics graduate who is enthusiastic about developing quality software. Have a strong understanding of HTML, CSS, JavaScript, TypeScript, Laravel, React.js, Next.js, and Vite.js. Skilled in Frontend Developer development, I am detail-oriented and comfortable working in a team to achieve the best results.</p>
+                  <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1.7, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="mb-6 text-zinc-500 dark:text-zinc-300">I am an Informatics graduate who is enthusiastic about developing quality software. Have a strong understanding of HTML, CSS, JavaScript, TypeScript, Laravel, React.js, Next.js, and Vite.js. Skilled in Frontend Developer development, I am detail-oriented and comfortable working in a team to achieve the best results.</motion.p>
                   <div className="grid grid-cols-1 gap-6">
                     <div>
-                      <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">About Me</h6>
-                      <table className="w-full">
+                      <motion.h6 initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">About Me</motion.h6>
+                      <motion.table initial={{ opacity: 0, y: 10 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="w-full">
                         <thead>
                           <tr>
                             <th className="px-3 py-1 dark:text-white border border-zinc-300 dark:border-zinc-800 font-medium">Information</th>
@@ -227,11 +231,11 @@ export default function Home() {
                             <td className="px-3 py-1 border border-zinc-300 dark:border-zinc-800">Dwika, Erina, Pradnya, Dearya, Bobi, Buk Kantin dan Pak Kantin</td>
                           </tr>
                         </tbody>
-                      </table>
+                      </motion.table>
                     </div>
                     <div>
-                      <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Programming language</h6>
-                      <div className="flex flex-wrap items-center gap-2 mb-6">
+                      <motion.h6 initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Programming language</motion.h6>
+                      <motion.div initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="flex flex-wrap items-center gap-2 mb-6">
                         <div className="flex items-center gap-1 bg-zinc-200/50 dark:bg-zinc-800 rounded-md px-3 py-1">
                           <Image draggable={false} src="https://laravel.com/img/logomark.min.svg" alt="laravel" width={32} height={32} className="p-1.5 saturate-0 dark:invert" />
                           <p>Laravel</p>
@@ -261,9 +265,9 @@ export default function Home() {
                           <Image draggable={false} src="https://www.postgresql.org/media/img/about/press/elephant.png" alt="PostgreSQL" width={32} height={32} className="p-1.5 saturate-0" />
                           <p>PostgreSQL</p>
                         </div>
-                      </div>
-                      <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Education</h6>
-                      <ul className="mb-6 flex flex-wrap items-center gap-x-8 gap-y-4 text-zinc-500 dark:text-zinc-300 list-disc pl-4">
+                      </motion.div>
+                      <motion.h6 initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Education</motion.h6>
+                      <motion.ul initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="mb-6 flex flex-wrap items-center gap-x-8 gap-y-4 text-zinc-500 dark:text-zinc-300 list-disc pl-4">
                         <li>
                           <p className="dark:text-white">2010 - 2016</p>
                           <p>SD Negeri 1 Antosari</p>
@@ -280,17 +284,17 @@ export default function Home() {
                           <p className="dark:text-white">2022 - 2023</p>
                           <p>Kampus Alfa Prima</p>
                         </li>
-                      </ul>
-                      <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Experience</h6>
-                      <p className="mb-6 text-zinc-500 dark:text-zinc-300">I have worked at PT. Alfa Prima Sejahtera as an IT Programmer since 2023. Here, I developed a new UI design for the website, created an employee management website, and optimized database performance.</p>
-                      <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Side projects</h6>
-                      <p className="mb-6 text-zinc-500 dark:text-zinc-300">Another project of mine is developing a web application for managing employee management, finance, and attendance within a company. This project is called &quot;Rekan Kamu.&quot; I built this system together with my friend, Dwika.</p>
-                      <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Hobby</h6>
-                      <p className="mb-6 text-zinc-500 dark:text-zinc-300">My hobbies include making music using <Link href="https://www.image-line.com/" target="_blank" className="text-white underline underline-offset-4">FL Studio</Link> for about 8 years, playing Mobile Legends, and coding since 2022.</p>
-                      <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Other Skills</h6>
-                      <p className="mb-6 text-zinc-500 dark:text-zinc-300">I also possess skills in audio recording, mixing, and music production using <Link href="https://www.image-line.com/" target="_blank" className="text-white underline underline-offset-4">FL Studio</Link>, allowing me to create professional-quality soundtracks and compositions.</p>
+                      </motion.ul>
+                      <motion.h6 initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Experience</motion.h6>
+                      <motion.p initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="mb-6 text-zinc-500 dark:text-zinc-300">I have worked at PT. Alfa Prima Sejahtera as an IT Programmer since 2023. Here, I developed a new UI design for the website, created an employee management website, and optimized database performance.</motion.p>
+                      <motion.h6 initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Side projects</motion.h6>
+                      <motion.p initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="mb-6 text-zinc-500 dark:text-zinc-300">Another project of mine is developing a web application for managing employee management, finance, and attendance within a company. This project is called &quot;Rekan Kamu.&quot; I built this system together with my friend, Dwika.</motion.p>
+                      <motion.h6 initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Hobby</motion.h6>
+                      <motion.p initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="mb-6 text-zinc-500 dark:text-zinc-300">My hobbies include making music using <Link href="https://www.image-line.com/" target="_blank" className="text-white underline underline-offset-4">FL Studio</Link> for about 8 years, playing Mobile Legends, and coding since 2022.</motion.p>
+                      <motion.h6 initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Other Skills</motion.h6>
+                      <motion.p initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="mb-6 text-zinc-500 dark:text-zinc-300">I also possess skills in audio recording, mixing, and music production using <Link href="https://www.image-line.com/" target="_blank" className="text-white underline underline-offset-4">FL Studio</Link>, allowing me to create professional-quality soundtracks and compositions.</motion.p>
                       {/* <p className="bg-zinc-200/50 dark:bg-zinc-800/50 rounded-md text-sm p-4">I also possess skills in audio recording, mixing, and music production using <Link href="https://www.image-line.com/" target="_blank" className="text-white underline underline-offset-4">FL Studio</Link>, allowing me to create professional-quality soundtracks and compositions.</p> */}
-                      <h6 className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">portfolio project</h6>
+                      <motion.h6 initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">portfolio project</motion.h6>
                       <ul className="flex flex-col gap-2 text-sm">
                         <li><Link href="https://next-rekan-kamu.vercel.app/login" target="_blank" className="inline-block bg-zinc-200/50 dark:bg-zinc-800/50 hover:text-blue-400 hover:underline rounded-md px-4 py-2">https://next-rekan-kamu.vercel.app/login</Link></li>
                         <li><Link href="https://next-ashura-bali.vercel.app" target="_blank" className="inline-block bg-zinc-200/50 dark:bg-zinc-800/50 hover:text-blue-400 hover:underline rounded-md px-4 py-2">https://next-ashura-bali.vercel.app</Link></li>
