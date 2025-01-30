@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useChat } from 'ai/react';
 import { Spotlight } from '@/components/ui/Spotlight-new';
 import ChatHome from './ChatHome';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface MessagesType {
     role: "user" | "data" | "system" | "assistant";
@@ -22,8 +23,12 @@ interface MessagesType {
 }
 
 function Chat() {
+    const [selectedModel, setSelectedModel] = useState<string>("gemma2-9b-it");
     const { messages, input, handleSubmit, isLoading, setInput, error, reload, stop } = useChat({
         api: '/api/ask-to-ai',
+        body: {
+            model: selectedModel ? selectedModel : "gemma2-9b-it",
+        },
         onFinish: (message, { usage, finishReason }) => {
             // console.log('Finished streaming message:', message);
             // console.log('Token usage:', usage);
@@ -251,11 +256,44 @@ function Chat() {
                     {messages.length > 0 &&
                         <div className="relative flex-none w-full mx-auto max-w-3xl px-4 pb-4 pt-14">
                             {!isAtBottom &&
-                                <div onClick={scrollToBottom} style={{ bottom: `${textareaHeight + 24}px` }} className="absolute start-1/2 -translate-x-1/2 z-10 backdrop-blur-sm bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer">
+                                <div onClick={scrollToBottom} style={{ bottom: `${textareaHeight + 64}px` }} className="absolute start-1/2 -translate-x-1/2 z-10 backdrop-blur-sm bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer">
                                     <MoveDown className='h-4 w-4' />
                                 </div>
                             }
-                            <div className='absolute z-10 end-4 flex justify-end items-center gap-2' style={{ bottom: `${textareaHeight + 24}px` }}>
+                            <div className='absolute z-10 inset-x-0 px-4 flex justify-between items-center gap-2' style={{ bottom: `${textareaHeight + 24}px` }}>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline" size="sm">
+                                            Model : {selectedModel ? selectedModel : 'gemma2-9b-it'}
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem onClick={() => setSelectedModel('deepseek-r1-distill-llama-70b')}>
+                                            deepseek-r1-distill-llama-70b
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setSelectedModel('gemma2-9b-it')}>
+                                            gemma2-9b-it<span className='text-xs text-zinc-600 dark:text-zinc-500'>(default)</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setSelectedModel('llama-3.1-8b-instant')}>
+                                            llama-3.1-8b-instant
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setSelectedModel('llama-3.3-70b-versatile')}>
+                                            llama-3.3-70b-versatile
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setSelectedModel('llama-guard-3-8b')}>
+                                            llama-guard-3-8b
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setSelectedModel('llama3-70b-8192')}>
+                                            llama3-70b-8192
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setSelectedModel('llama3-8b-8192')}>
+                                            llama3-8b-8192
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setSelectedModel('mixtral-8x7b-32768')}>
+                                            mixtral-8x7b-32768
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                                 {isLoading &&
                                     <Button onClick={() => stop()} title='Stop Generate' variant={'outline'} size={'sm'}>
                                         <CircleX />Stop

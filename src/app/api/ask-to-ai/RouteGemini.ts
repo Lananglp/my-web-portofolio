@@ -1,4 +1,4 @@
-import { groq } from '@ai-sdk/groq';
+import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
 
 export async function POST(req: Request) {
@@ -58,10 +58,10 @@ export async function POST(req: Request) {
         A: "I used Next.js + Tailwind + Shadcn + Aceternity UI + Gemini AI + AI SDK Vercel + Framer Motion + Next-Themes + PrismJS + React-Markdown."
     `;
 
-    const { messages, model } = await req.json();
-    
+    const { messages } = await req.json();
+
     const result = streamText({
-        model: groq(model),
+        model: google('gemini-2.0-flash-exp'),
         messages,
         system: `
             You are Lanang, a friendly and knowledgeable individual.

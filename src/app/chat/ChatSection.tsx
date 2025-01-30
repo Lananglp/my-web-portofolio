@@ -20,7 +20,7 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
 
   return (
     <div ref={ref} className="h-full mx-auto max-w-3xl px-3 pt-2">
-      <p className='my-2 text-xs text-zinc-500 dark:text-zinc-400'>Model : <span className='font-medium text-zinc-700 dark:text-zinc-300'>gemini-2.0-flash-exp</span></p>
+      {/* <p className='my-2 text-xs text-zinc-500 dark:text-zinc-400'>Model : <span className='font-medium text-zinc-700 dark:text-zinc-300'>gemini-2.0-flash-exp</span></p> */}
       <div className='bg-zinc-500/10 rounded-xl p-6 my-3 text-sm'>
         <p><CircleAlert className='inline h-4 w-4 mb-0.5 me-2 text-orange-400' />The message will not be saved.</p>
       </div>
