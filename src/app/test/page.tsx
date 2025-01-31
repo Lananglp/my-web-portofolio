@@ -1,11 +1,17 @@
 'use client'
 import { useChat } from 'ai/react';
-import React from 'react'
+import React, { useState } from 'react'
+import { initialModel, ModelType } from '../chat/Chat';
+import { Button } from '@/components/ui/button';
 
 function TestPage() {
-
+    const [selectedModel, setSelectedModel] = useState<ModelType>(initialModel);
     const { messages, input, handleSubmit, isLoading, setInput, error, reload, stop } = useChat({
         api: '/api/ask-to-ai',
+        body: {
+            model: selectedModel ? selectedModel.name : initialModel.name,
+            provider: selectedModel ? selectedModel.provider : initialModel.provider
+        },
         onFinish: (message, { usage, finishReason }) => {
             console.log('Finished streaming message:', message);
             console.log('Token usage:', usage);
@@ -23,17 +29,19 @@ function TestPage() {
         <div>
             <h1>Test Page</h1>
             <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
+                <textarea
+                    className='w-96 border'
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     placeholder="Type something..."
+                    rows={8}
                 />
-                <button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading} className='block w-96'>
                     {isLoading ? 'Loading...' : 'Submit'}
-                </button>
+                </Button>
             </form>
-            <div>
+            <div className='w-96 border min-h-96'>
+                <p>Messages:</p>
                 {messages.map(message => (
                     <div key={message.id}>
                         {message.role === 'user' ? 'user: ' : 'assistant: '}

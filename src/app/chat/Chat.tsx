@@ -22,20 +22,48 @@ interface MessagesType {
     content: string;
 }
 
+export interface ModelType {
+    name: string;
+    title: string;
+    description: string;
+    parameter: string;
+    provider: string;
+    status: "active" | "inactive" | string;
+}
+
+export const initialModel = {
+    name: "gemini-1.5-flash-8b",
+    title: "Gemini 1.5",
+    description: "Google's most powerful model at the moment",
+    parameter: "Unknown",
+    provider: "google",
+    status: "active"
+};
+
 function Chat() {
-    const [selectedModel, setSelectedModel] = useState<string>("gemma2-9b-it");
+    const [selectedModel, setSelectedModel] = useState<ModelType>(initialModel);
+    const [yourTokenUsage, setYourTokenUsage] = useState<number>(0);
     const { messages, input, handleSubmit, isLoading, setInput, error, reload, stop } = useChat({
         api: '/api/ask-to-ai',
         body: {
-            model: selectedModel ? selectedModel : "gemma2-9b-it",
+            model: selectedModel ? selectedModel.name : initialModel.name,
+            provider: selectedModel ? selectedModel.provider : initialModel.provider,
+            tokenUsage: yourTokenUsage
         },
         onFinish: (message, { usage, finishReason }) => {
             // console.log('Finished streaming message:', message);
-            // console.log('Token usage:', usage);
+            console.log('Token usage:', usage.totalTokens);
             // console.log('Finish reason:', finishReason);
+            setYourTokenUsage(usage.totalTokens);
         },
         onError: error => {
-            // console.error('An error occurred:', error);
+            // const isError: any = error?.message;
+            // if (isError.error) {
+            //     console.error('isError:', JSON.parse(isError.error) || isError);
+            //     setErrorMessage(isError.error);
+            // } else {
+            //     console.error('An error occurred:', error?.message || error);
+            // }
         },
         onResponse: response => {
             // console.log('Received HTTP response from server:', response);
@@ -205,6 +233,113 @@ function Chat() {
         checkMobileDevice();
     }, []);
 
+    const listModels = [
+        {
+            name: "deepseek-ai/DeepSeek-V3",
+            title: "Deepseek V3",
+            description: "The best new model at the moment",
+            parameter: "Unkown",
+            provider: "deepinfra",
+            status: "inactive"
+        },
+        {
+            name: "deepseek-r1-distill-llama-70b",
+            title: "Deepseek R1",
+            description: "The best model at the moment",
+            parameter: "70 Billion Parameters",
+            provider: "groq",
+            status: "active"
+        },
+        {
+            name: "gemma2-9b-it",
+            title: "Gemma 2",
+            description: "Model with a very friendly language style",
+            parameter: "9 Billion Parameters",
+            provider: "groq",
+            status: "active"
+        },
+        {
+            name: "gpt-4o-mini",
+            title: "chatGPT 4o Mini",
+            description: "The best and most famous model of a million people",
+            parameter: "Unkown",
+            provider: "openai",
+            status: "inactive"
+        },
+        {
+            name: "gpt-3.5-turbo",
+            title: "chatGPT 3.5",
+            description: "The best and most famous model of a million people",
+            parameter: "Unkown",
+            provider: "openai",
+            status: "inactive"
+        },
+        {
+            name: "gemini-1.5-pro",
+            title: "Gemini 1.5 Pro",
+            description: "Google's most powerful model at the moment",
+            parameter: "Unknown",
+            provider: "google",
+            status: "active"
+        },
+        {
+            name: "gemini-2.0-flash-exp",
+            title: "Gemini 2.0",
+            description: "The newest model made by Google at the moment",
+            parameter: "Unknown",
+            provider: "google",
+            status: "active"
+        },
+        {
+            name: "gemini-1.5-flash-8b",
+            title: "Gemini 1.5",
+            description: "Google's most powerful model at the moment",
+            parameter: "Unknown",
+            provider: "google",
+            status: "active"
+        },
+        {
+            name: "nvidia/Llama-3.1-Nemotron-70B-Instruct",
+            title: "Nvidia AI",
+            description: "Model by Nvidia AI",
+            parameter: "70 Billion Parameters",
+            provider: "deepinfra",
+            status: "inactive"
+        },
+        {
+            name: "microsoft/WizardLM-2-8x22B",
+            title: "Microsoft AI",
+            description: "Model by Microsoft AI",
+            parameter: "22 Billion Parameters",
+            provider: "deepinfra",
+            status: "inactive"
+        },
+        {
+            name: "llama-3.3-70b-versatile",
+            title: "Llama 3.3",
+            description: "The best model for anyone",
+            parameter: "70 Billion Parameters",
+            provider: "groq",
+            status: "active"
+        },
+        {
+            name: "llama-3.1-8b-instant",
+            title: "Llama 3.1",
+            description: "Model with concise and to the point answers",
+            parameter: "8 Billion Parameters",
+            provider: "groq",
+            status: "active"
+        },
+        {
+            name: "mixtral-8x7b-32768",
+            title: "Mixtral",
+            description: "The best model for all of us",
+            parameter: "8 Billion Parameters",
+            provider: "groq",
+            status: "active"
+        },
+    ];
+
     return (
         <AnimatePresence mode='wait'>
             {activePage &&
@@ -264,34 +399,18 @@ function Chat() {
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button variant="outline" size="sm">
-                                            Model : {selectedModel ? selectedModel : 'gemma2-9b-it'}
+                                            Model : {selectedModel ? listModels.find((model) => model.name === selectedModel.name)?.title : initialModel.name}
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
-                                        <DropdownMenuItem onClick={() => setSelectedModel('deepseek-r1-distill-llama-70b')}>
-                                            deepseek-r1-distill-llama-70b
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setSelectedModel('gemma2-9b-it')}>
-                                            gemma2-9b-it<span className='text-xs text-zinc-600 dark:text-zinc-500'>(default)</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setSelectedModel('llama-3.1-8b-instant')}>
-                                            llama-3.1-8b-instant
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setSelectedModel('llama-3.3-70b-versatile')}>
-                                            llama-3.3-70b-versatile
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setSelectedModel('llama-guard-3-8b')}>
-                                            llama-guard-3-8b
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setSelectedModel('llama3-70b-8192')}>
-                                            llama3-70b-8192
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setSelectedModel('llama3-8b-8192')}>
-                                            llama3-8b-8192
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setSelectedModel('mixtral-8x7b-32768')}>
-                                            mixtral-8x7b-32768
-                                        </DropdownMenuItem>
+                                        {listModels.map((model, index) => (
+                                            <DropdownMenuItem key={index} onClick={() => setSelectedModel(model)} className={`${model.name === selectedModel.name ? 'bg-zinc-200/50 dark:bg-zinc-800/50' : ''}`} disabled={model.status === 'inactive' ? true : false}>
+                                                {model.title}
+                                                {/* &nbsp; */}
+                                                {model.name === initialModel.name && <span className='text-xs text-zinc-600 dark:text-zinc-500'>(default)</span>}
+                                                {model.status === 'inactive' && <span className='text-xs text-zinc-600 dark:text-zinc-500'>(not available)</span>}
+                                            </DropdownMenuItem>
+                                        ))}
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                                 {isLoading &&

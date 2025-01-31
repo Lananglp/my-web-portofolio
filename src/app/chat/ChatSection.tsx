@@ -18,6 +18,8 @@ interface ChatSectionProps {
 const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) => {
   const { messages, loading, error, reload, stop } = props;
 
+  const isError: any = error?.message
+
   return (
     <div ref={ref} className="h-full mx-auto max-w-3xl px-3 pt-2">
       {/* <p className='my-2 text-xs text-zinc-500 dark:text-zinc-400'>Model : <span className='font-medium text-zinc-700 dark:text-zinc-300'>gemini-2.0-flash-exp</span></p> */}
@@ -88,6 +90,7 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
               <p className='mb-3'>
                 <X className='inline text-red-500 h-5 w-5 mb-0.5 me-1' />
                 {error.message}
+                {/* {isError ? isError.error : isError} */}
               </p>
             </div>
           </div>

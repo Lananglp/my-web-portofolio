@@ -116,7 +116,7 @@ function ChatHome({ handleSendMessage, textareaRef, input, handleInputChange, is
                             </motion.span>
                         </motion.span>
                     </motion.div>
-                    <div className='mb-8 font-medium text-xl md:text-3xl md:text-white md:flex justify-center items-center'>
+                    <div className='mb-8 font-medium text-xl md:text-3xl md:text-white md:flex justify-center items-center gap-x-2'>
                         <motion.p
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -129,7 +129,7 @@ function ChatHome({ handleSendMessage, textareaRef, input, handleInputChange, is
                             }}
                             className='text-6xl md:text-3xl font-medium md:text-white'
                         >
-                            Hello,{" "}
+                            Hello,
                         </motion.p>
                         <motion.p initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 6.2, type: 'spring', visualDuration: 0.3, bounce: 0.6 }}>is there anything you want to ask me?</motion.p>
                     </div>
