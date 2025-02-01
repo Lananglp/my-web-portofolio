@@ -62,10 +62,10 @@ export async function POST(req: Request) {
         model: selectedModel,
         messages,
         system: systemInstructionsText,
-        experimental_transform: smoothStream({
-            delayInMs: 30, // optional: defaults to 10ms
-            chunking: 'word', // optional: defaults to 'word'
-        }),
+        // experimental_transform: smoothStream({
+        //     delayInMs: 30, // optional: defaults to 10ms
+        //     chunking: 'word', // optional: defaults to 'word'
+        // }),
     });
 
     return result.toDataStreamResponse({
