@@ -18,7 +18,7 @@ interface ChatSectionProps {
 const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) => {
   const { messages, loading, error, reload, stop } = props;
 
-  const isError: any = error?.message
+  const isError: any = error?.message;
 
   return (
     <div ref={ref} className="h-full mx-auto max-w-3xl px-3 pt-2">
@@ -45,7 +45,7 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
                   <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
                 </div> */}
                 <div className='flex items-center gap-2'>
-                  <div className="relative bg-white dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
+                  <div className="relative bg-zinc-700 text-zinc-300 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
                     <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
                   </div>
                   <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
@@ -60,7 +60,7 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
       ) : (
         <div className='mb-3'>
           <div className='flex items-center gap-2'>
-            <div className="relative bg-white dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
+            <div className="relative bg-zinc-700 text-zinc-300 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
               <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
             </div>
             <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
@@ -81,7 +81,7 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
         error && (
           <div>
             <div className='flex items-center gap-2'>
-              <div className="relative bg-white dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
+              <div className="relative bg-zinc-700 text-zinc-300 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
                 <Cog className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
               </div>
               <h6 className='font-semibold dark:font-normal dark:text-white'>System</h6>

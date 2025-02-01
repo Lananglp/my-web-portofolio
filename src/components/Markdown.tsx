@@ -7,7 +7,6 @@ import 'prismjs/components/prism-javascript.min.js';
 import 'prismjs/components/prism-typescript.min.js';
 import 'prismjs/components/prism-jsx.min.js';
 import 'prismjs/components/prism-tsx.min.js';
-import { img } from "motion/react-client";
 
 export const NonMemoizedMarkdown = ({ children }: { children: string }) => {
 
@@ -19,10 +18,13 @@ export const NonMemoizedMarkdown = ({ children }: { children: string }) => {
     code: ({ node, inline, className, children, ...props }: any) => {
       const match = /language-(\w+)/.exec(className || "");
       return !inline && match ? (
-        <div className="mb-6">
+        <div className="relative mb-6 pt-[1.2rem]">
+            <div className="absolute inset-x-0 top-0 w-[80dvw] md:max-w-[500px] bg-zinc-600 text-zinc-300 rounded-t-xl px-4 py-1">
+              <p className="text-sm">{match[1] || 'plaintext'}</p>
+            </div>
             <pre
                 {...props}
-                className={`${className} text-sm w-[80dvw] md:max-w-[500px] overflow-x-scroll bg-zinc-100 p-2 rounded-xl mt-2 dark:bg-zinc-800`}
+                className={`${className} text-sm w-[80dvw] md:max-w-[500px] overflow-x-scroll bg-zinc-100 p-2 rounded-b-xl mt-2 dark:bg-zinc-800`}
             >
                 <code className={match[1]}>{children}</code>
             </pre>
@@ -180,6 +182,9 @@ export const NonMemoizedMarkdown = ({ children }: { children: string }) => {
           {...props}
         />
       );
+    },
+    hr: ({ node, ...props }: any) => {
+      return <hr className="my-6" {...props} />;
     },
   };
 

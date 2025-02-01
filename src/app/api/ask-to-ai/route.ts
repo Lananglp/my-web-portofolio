@@ -2,7 +2,9 @@ import { groq } from '@ai-sdk/groq';
 import { deepinfra } from '@ai-sdk/deepinfra';
 import { google } from '@ai-sdk/google';
 import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { togetherai } from '@ai-sdk/togetherai';
+import { smoothStream, streamText } from 'ai';
+import { wrapLanguageModel, extractReasoningMiddleware } from 'ai';
 import { NextResponse } from 'next/server';
 import { systemInstructionsText } from '@/helper/helper';
 
@@ -32,7 +34,7 @@ export async function POST(req: Request) {
         }
     }
 
-    if (tokenUsage > 2000) {
+    if (tokenUsage > 4000) {
         return NextResponse.json("Thank you for asking me, but unfortunately Lanang limits long messages because Lanang uses the free features of the existing model.", { status: 400 });
     }
     
@@ -45,6 +47,13 @@ export async function POST(req: Request) {
         selectedModel = google(model);
     } else if (provider === 'openai') {
         selectedModel = openai(model);
+    } else if (provider === 'together') {
+        selectedModel = togetherai(model);
+    } else if (provider === 'together' && model === 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free') {
+        selectedModel = wrapLanguageModel({
+            model: togetherai('deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free'),
+            middleware: extractReasoningMiddleware({ tagName: 'think' }),
+        });
     } else {
         throw new Error('Provider not supported');
     }
@@ -53,7 +62,13 @@ export async function POST(req: Request) {
         model: selectedModel,
         messages,
         system: systemInstructionsText,
+        experimental_transform: smoothStream({
+            delayInMs: 30, // optional: defaults to 10ms
+            chunking: 'word', // optional: defaults to 'word'
+        }),
     });
 
-    return result.toDataStreamResponse();
+    return result.toDataStreamResponse({
+        sendReasoning: false,
+    });
 }

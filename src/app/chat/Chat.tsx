@@ -16,6 +16,7 @@ import { useChat } from 'ai/react';
 import { Spotlight } from '@/components/ui/Spotlight-new';
 import ChatHome from './ChatHome';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { initialModel, listModels } from '@/helper/helper';
 
 interface MessagesType {
     role: "user" | "data" | "system" | "assistant";
@@ -30,15 +31,6 @@ export interface ModelType {
     provider: string;
     status: "active" | "inactive" | string;
 }
-
-export const initialModel = {
-    name: "gemini-1.5-flash-8b",
-    title: "Gemini 1.5",
-    description: "Google's most powerful model at the moment",
-    parameter: "Unknown",
-    provider: "google",
-    status: "active"
-};
 
 function Chat() {
     const [selectedModel, setSelectedModel] = useState<ModelType>(initialModel);
@@ -119,41 +111,6 @@ function Chat() {
         }
     };
 
-    // const handleSendMessage = async () => {
-    //     if (!userMessage) return;
-    //     scrollToBottom();
-    //     handleProcessResponse();
-    //     setLoading(true);
-    //     dispatch(setIsThingking({ loading: true }));
-    //     setLogError('');
-    //     handleAddHistory("user", userMessage);
-
-    //     try {
-    //         const response = await fetch('/api/ask-to-ai', {
-    //             method: 'POST',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             body: JSON.stringify({ userMessage, chatHistory }),
-    //         });
-
-    //         const data = await response.json();
-    //         if (data.message) {
-    //             handleAddHistory("model", data.message);
-    //         } else {
-    //             setLogError('No response from AI.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching AI response:', error);
-    //         setLogError('An error occurred, please get the information manually by pressing the button above.');
-    //     } finally {
-    //         setLoading(false);
-    //         dispatch(setIsThingking({ loading: false }));
-    //         setUserMessage('');
-    //         if (textareaRef.current) {
-    //             textareaRef.current.blur();
-    //         }
-    //     }
-    // };
-
     const handleAddHistory = (role: "user" | "data" | "system" | "assistant", content: string) => {
         dispatch(addChatHistory({ role: role, content: content }));
     };
@@ -167,11 +124,7 @@ function Chat() {
         }
     };
 
-    // useEffect(() => {
-    //     if (typeof window !== "undefined") {
-    //         scrollToBottom();
-    //     }
-    // }, [chatHistory]);
+    const isMessage = messages.length > 0;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -192,7 +145,7 @@ function Chat() {
                 scrollRef.current.removeEventListener("scroll", handleScroll);
             }
         };
-    }, [scrollRef]);
+    }, [scrollRef, isMessage]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -233,113 +186,6 @@ function Chat() {
         checkMobileDevice();
     }, []);
 
-    const listModels = [
-        {
-            name: "deepseek-ai/DeepSeek-V3",
-            title: "Deepseek V3",
-            description: "The best new model at the moment",
-            parameter: "Unkown",
-            provider: "deepinfra",
-            status: "inactive"
-        },
-        {
-            name: "deepseek-r1-distill-llama-70b",
-            title: "Deepseek R1",
-            description: "The best model at the moment",
-            parameter: "70 Billion Parameters",
-            provider: "groq",
-            status: "active"
-        },
-        {
-            name: "gemma2-9b-it",
-            title: "Gemma 2",
-            description: "Model with a very friendly language style",
-            parameter: "9 Billion Parameters",
-            provider: "groq",
-            status: "active"
-        },
-        {
-            name: "gpt-4o-mini",
-            title: "chatGPT 4o Mini",
-            description: "The best and most famous model of a million people",
-            parameter: "Unkown",
-            provider: "openai",
-            status: "inactive"
-        },
-        {
-            name: "gpt-3.5-turbo",
-            title: "chatGPT 3.5",
-            description: "The best and most famous model of a million people",
-            parameter: "Unkown",
-            provider: "openai",
-            status: "inactive"
-        },
-        {
-            name: "gemini-1.5-pro",
-            title: "Gemini 1.5 Pro",
-            description: "Google's most powerful model at the moment",
-            parameter: "Unknown",
-            provider: "google",
-            status: "active"
-        },
-        {
-            name: "gemini-2.0-flash-exp",
-            title: "Gemini 2.0",
-            description: "The newest model made by Google at the moment",
-            parameter: "Unknown",
-            provider: "google",
-            status: "active"
-        },
-        {
-            name: "gemini-1.5-flash-8b",
-            title: "Gemini 1.5",
-            description: "Google's most powerful model at the moment",
-            parameter: "Unknown",
-            provider: "google",
-            status: "active"
-        },
-        {
-            name: "nvidia/Llama-3.1-Nemotron-70B-Instruct",
-            title: "Nvidia AI",
-            description: "Model by Nvidia AI",
-            parameter: "70 Billion Parameters",
-            provider: "deepinfra",
-            status: "inactive"
-        },
-        {
-            name: "microsoft/WizardLM-2-8x22B",
-            title: "Microsoft AI",
-            description: "Model by Microsoft AI",
-            parameter: "22 Billion Parameters",
-            provider: "deepinfra",
-            status: "inactive"
-        },
-        {
-            name: "llama-3.3-70b-versatile",
-            title: "Llama 3.3",
-            description: "The best model for anyone",
-            parameter: "70 Billion Parameters",
-            provider: "groq",
-            status: "active"
-        },
-        {
-            name: "llama-3.1-8b-instant",
-            title: "Llama 3.1",
-            description: "Model with concise and to the point answers",
-            parameter: "8 Billion Parameters",
-            provider: "groq",
-            status: "active"
-        },
-        {
-            name: "mixtral-8x7b-32768",
-            title: "Mixtral",
-            description: "The best model for all of us",
-            parameter: "8 Billion Parameters",
-            provider: "groq",
-            status: "active"
-        },
-    ];
-
     return (
         <AnimatePresence mode='wait'>
             {activePage &&
@@ -364,7 +210,10 @@ function Chat() {
 
                     <div className='flex flex-none justify-between items-center backdrop-blur-sm border-b px-4 py-3'>
                         <Button onClick={backHome} className='hover:bg-transparent' variant={'ghost'}><ArrowLeft className='inline h-4 w-4 mb-0.5 me-1' />About me</Button>
-                        <ToggleThemeButton />
+                        <div className='flex items-center gap-3'>
+                            <p className='text-sm'>v3</p>
+                            <ToggleThemeButton />
+                        </div>
                     </div>
 
                     <div ref={scrollRef} className="flex-grow z-10 h-full overflow-y-auto">

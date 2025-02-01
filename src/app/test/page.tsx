@@ -1,8 +1,9 @@
 'use client'
 import { useChat } from 'ai/react';
 import React, { useState } from 'react'
-import { initialModel, ModelType } from '../chat/Chat';
 import { Button } from '@/components/ui/button';
+import { initialModel } from '@/helper/helper';
+import { ModelType } from '../chat/Chat';
 
 function TestPage() {
     const [selectedModel, setSelectedModel] = useState<ModelType>(initialModel);
