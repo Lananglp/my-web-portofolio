@@ -68,7 +68,5 @@ export async function POST(req: Request) {
         // }),
     });
 
-    return result.toDataStreamResponse({
-        sendReasoning: false,
-    });
+    return result.toDataStreamResponse();
 }
