@@ -24,6 +24,7 @@ interface MessagesType {
 }
 
 export interface ModelType {
+    id: number;
     name: string;
     title: string;
     description: string;
@@ -220,6 +221,7 @@ function Chat() {
                         {messages.length > 0 ? (
                             <ChatSection
                                 messages={messages}
+                                selectedModel={selectedModel}
                                 loading={isLoading}
                                 error={error}
                                 reload={reload}

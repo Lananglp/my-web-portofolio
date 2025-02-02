@@ -72,9 +72,10 @@ export const systemInstructionsText = `
 `;
 
 export const initialModel = {
+    id: 2,
     name: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
     title: "Llama 3.3",
-    description: "Model with a very friendly language style",
+    description: "A fast and efficient AI model capable of understanding and generating high-quality text. Perfect for chatbots, translation, and various language-based applications.",
     parameter: "70 Billion Parameters",
     provider: "together",
     status: "active"
@@ -82,6 +83,7 @@ export const initialModel = {
 
 export const listModels = [
     {
+        id: 1,
         name: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
         title: "Deepseek R1",
         description: "An advanced AI model designed for high-accuracy information retrieval and natural language processing. Ideal for data analysis and complex text comprehension.",
@@ -90,6 +92,7 @@ export const listModels = [
         status: "active"
     },
     {
+        id: 2,
         name: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
         title: "Llama 3.3",
         description: "A fast and efficient AI model capable of understanding and generating high-quality text. Perfect for chatbots, translation, and various language-based applications.",

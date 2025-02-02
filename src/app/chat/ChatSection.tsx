@@ -1,6 +1,9 @@
-import React, { forwardRef } from 'react';
+'use client'
+import React, { forwardRef, useState } from 'react';
 import { CircleAlert, Cog, UserRound, X } from 'lucide-react';
 import { Markdown } from '@/components/Markdown';
+import { ModelType } from './Chat';
+import { Button } from '@/components/ui/button';
 
 interface MessagesType {
   role: "user" | "data" | "system" | "assistant";
@@ -9,6 +12,7 @@ interface MessagesType {
 
 interface ChatSectionProps {
   messages: MessagesType[];
+  selectedModel: ModelType;
   loading: boolean;
   error: Error | undefined;
   reload: () => void;
@@ -16,13 +20,24 @@ interface ChatSectionProps {
 }
 
 const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) => {
-  const { messages, loading, error, reload, stop } = props;
-
-  const isError: any = error?.message;
+  const { messages, selectedModel, loading, error, reload, stop } = props;
+  const [show, setShow] = useState<boolean>(true);
 
   return (
     <div ref={ref} className="h-full mx-auto max-w-3xl px-3 pt-2">
-      {/* <p className='my-2 text-xs text-zinc-500 dark:text-zinc-400'>Model : <span className='font-medium text-zinc-700 dark:text-zinc-300'>gemini-2.0-flash-exp</span></p> */}
+      {selectedModel.id === 1 ? show ? (
+          <div className='fixed z-10 top-14 mx-auto inset-x-0 max-w-3xl mt-6'>
+            <div className='bg-zinc-100 dark:bg-zinc-950 rounded-xl text-sm mx-3'>
+              <div className='bg-yellow-400/10 rounded-xl ps-6 py-6 pe-16'>
+                <Button onClick={() => setShow(false)} className='absolute top-2 right-2 hover:bg-transparent' variant='ghost'><X /></Button>
+                <p><CircleAlert className='inline h-4 w-4 mb-0.5 me-2' />This model is experimental, the responses that appear may be wrong or incomplete.</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <Button onClick={() => setShow(true)} className='fixed z-10 top-14 end-3 mt-6 px-2.5 dark:bg-zinc-800 text-orange-400 rounded-full'><CircleAlert /></Button>
+        )
+      : null}
       <div className='bg-zinc-500/10 rounded-xl p-6 my-3 text-sm'>
         <p><CircleAlert className='inline h-4 w-4 mb-0.5 me-2 text-orange-400' />The message will not be saved.</p>
       </div>
@@ -38,12 +53,6 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
             )}
             {msg.role === 'assistant' && (
               <div className='mb-3'>
-                {/* <div className='flex items-center gap-2'>
-                  <div className="relative bg-zinc-600 text-zinc-300 dark:bg-zinc-700 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
-                    <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
-                  </div>
-                  <h6 className='font-semibold dark:font-normal dark:text-white'>Lanang Lanusa</h6>
-                </div> */}
                 <div className='flex items-center gap-2'>
                   <div className="relative bg-zinc-700 text-zinc-300 rounded-full dark:shadow-lg dark:shadow-black/25 aspect-square w-7 h-7">
                     <UserRound className="absolute start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4" />
@@ -90,7 +99,6 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
               <p className='mb-3'>
                 <X className='inline text-red-500 h-5 w-5 mb-0.5 me-1' />
                 {error.message}
-                {/* {isError ? isError.error : isError} */}
               </p>
             </div>
           </div>

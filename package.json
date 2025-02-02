@@ -1,10 +1,10 @@
 {
   "name": "lananglp-website",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "dev:wifi": "next dev --turbopack -H 192.168.103.52",
+    "dev:wifi": "next dev --turbopack -H 192.168.162.52",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
