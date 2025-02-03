@@ -29,14 +29,14 @@ export async function POST(req: Request) {
     const latestUserMessage = messages.slice().reverse().find(msg => msg.role === "user");
 
     if (latestUserMessage) {
-        if (latestUserMessage.content.length > 500) {
+        if (latestUserMessage.content.length > 900) {
             return NextResponse.json("The message you provided is too long.", { status: 400 });
         }
     }
 
-    if (tokenUsage > 4000) {
-        return NextResponse.json("Thank you for asking me, but unfortunately Lanang limits long messages because Lanang uses the free features of the existing model.", { status: 400 });
-    }
+    // if (tokenUsage > 4000) {
+    //     return NextResponse.json("Thank you for asking me, but unfortunately Lanang limits long messages because Lanang uses the free features of the existing model.", { status: 400 });
+    // }
     
     let selectedModel;
     if (provider === 'groq') {

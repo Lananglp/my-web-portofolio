@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const MAX_REQUESTS = 10;
+const MAX_REQUESTS = 100;
 const COOLDOWN_TIME = 30 * 60 * 1000;
 const IS_LOCAL = process.env.IS_LOCAL === "true";
 const COOKIE_NAME = "__gj4wt02w9rsoj2";
