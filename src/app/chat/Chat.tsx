@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, CircleAlert, CircleX, LoaderCircle, MoveDown, RotateCw, Send } from 'lucide-react';
+import { ArrowLeft, CircleAlert, CircleX, LoaderCircle, MoveDown, RadioTower, RotateCw, Send, Wifi } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react'
 import ChatSection from './ChatSection';
 import { addChatHistory } from '../globalState/chatHistorySlice';
@@ -31,6 +31,7 @@ export interface ModelType {
     parameter: string;
     provider: string;
     status: "active" | "inactive" | string;
+    latency?: "low" | "medium" | "high" | string;
 }
 
 function Chat() {
@@ -44,9 +45,9 @@ function Chat() {
             tokenUsage: yourTokenUsage
         },
         onFinish: (message, { usage, finishReason }) => {
-            // console.log('Finished streaming message:', message);
+            console.log('Finished streaming message:', message);
             console.log('Token usage:', usage.totalTokens);
-            // console.log('Finish reason:', finishReason);
+            console.log('Finish reason:', finishReason);
             setYourTokenUsage(usage.totalTokens);
         },
         onError: error => {
@@ -57,9 +58,10 @@ function Chat() {
             // } else {
             //     console.error('An error occurred:', error?.message || error);
             // }
+            console.error('An error occurred:', error?.message || error);
         },
         onResponse: response => {
-            // console.log('Received HTTP response from server:', response);
+            console.log('Received HTTP response from server:', response);
         },        
     });
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -212,7 +214,7 @@ function Chat() {
                     <div className='flex flex-none justify-between items-center backdrop-blur-sm border-b px-4 py-3'>
                         <Button onClick={backHome} className='hover:bg-transparent' variant={'ghost'}><ArrowLeft className='inline h-4 w-4 mb-0.5 me-1' />About me</Button>
                         <div className='flex items-center gap-3'>
-                            <p className='text-sm'>v3</p>
+                            <p className='text-sm'>v3.1.4</p>
                             <ToggleThemeButton />
                         </div>
                     </div>
@@ -247,23 +249,38 @@ function Chat() {
                                 </div>
                             }
                             <div className='absolute z-10 inset-x-0 px-4 flex justify-between items-center gap-2' style={{ bottom: `${textareaHeight + 24}px` }}>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" size="sm">
-                                            Model : {selectedModel ? listModels.find((model) => model.name === selectedModel.name)?.title : initialModel.name}
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        {listModels.map((model, index) => (
-                                            <DropdownMenuItem key={index} onClick={() => setSelectedModel(model)} className={`${model.name === selectedModel.name ? 'bg-zinc-200/50 dark:bg-zinc-800/50' : ''}`} disabled={model.status === 'inactive' ? true : false}>
-                                                {model.title}
-                                                {/* &nbsp; */}
-                                                {model.name === initialModel.name && <span className='text-xs text-zinc-600 dark:text-zinc-500'>(default)</span>}
-                                                {model.status === 'inactive' && <span className='text-xs text-zinc-600 dark:text-zinc-500'>(not available)</span>}
-                                            </DropdownMenuItem>
-                                        ))}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <div className='flex items-center gap-2'>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline" size="sm">
+                                                Model : {selectedModel ? listModels.find((model) => model.name === selectedModel.name)?.title : initialModel.name}
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            {listModels.map((model, index) => (
+                                                <DropdownMenuItem key={index} onClick={() => setSelectedModel(model)} className={`${model.name === selectedModel.name ? 'bg-zinc-200/50 dark:bg-zinc-800/50' : ''}`} disabled={model.status === 'inactive' ? true : false}>
+                                                    {model.title}
+                                                    {/* &nbsp; */}
+                                                    {model.name === initialModel.name && <span className='text-xs text-zinc-600 dark:text-zinc-500'>(default)</span>}
+                                                    {model.status === 'inactive' && <span className='text-xs text-zinc-600 dark:text-zinc-500'>(not available)</span>}
+                                                </DropdownMenuItem>
+                                            ))}
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                    <p className='text-[11px] font-medium'>
+                                        <Wifi className='inline h-3 w-3 mb-0.5 me-1' />
+                                        {selectedModel?.latency ? 
+                                            selectedModel.latency === 'low' ? (
+                                                <span className='text-red-500'>Low</span>
+                                            ) : selectedModel.latency === 'medium' ? (
+                                                <span className='text-yellow-500'>Medium</span>
+                                            ) : selectedModel.latency === 'high' && (
+                                                <span className='text-green-500'>High</span>
+                                            )
+                                            : 'none'
+                                        }
+                                    </p>
+                                </div>
                                 {isLoading &&
                                     <Button onClick={() => stop()} title='Stop Generate' variant={'outline'} size={'sm'}>
                                         <CircleX />Stop

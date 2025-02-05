@@ -3,6 +3,7 @@ import { deepinfra } from '@ai-sdk/deepinfra';
 import { google } from '@ai-sdk/google';
 import { openai } from '@ai-sdk/openai';
 import { togetherai } from '@ai-sdk/togetherai';
+import { openrouter } from '@openrouter/ai-sdk-provider';
 import { smoothStream, streamText } from 'ai';
 import { wrapLanguageModel, extractReasoningMiddleware } from 'ai';
 import { NextResponse } from 'next/server';
@@ -34,9 +35,9 @@ export async function POST(req: Request) {
         }
     }
 
-    // if (tokenUsage > 4000) {
-    //     return NextResponse.json("Thank you for asking me, but unfortunately Lanang limits long messages because Lanang uses the free features of the existing model.", { status: 400 });
-    // }
+    if (tokenUsage > 12000) {
+        return NextResponse.json("Thank you for asking me, but unfortunately Lanang limits long messages because Lanang uses the free features of the existing model.", { status: 400 });
+    }
     
     let selectedModel;
     if (provider === 'groq') {
@@ -49,11 +50,8 @@ export async function POST(req: Request) {
         selectedModel = openai(model);
     } else if (provider === 'together') {
         selectedModel = togetherai(model);
-    } else if (provider === 'together' && model === 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free') {
-        selectedModel = wrapLanguageModel({
-            model: togetherai('deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free'),
-            middleware: extractReasoningMiddleware({ tagName: 'think' }),
-        });
+    } else if (provider === 'openRouter') {
+        selectedModel = openrouter(model);
     } else {
         throw new Error('Provider not supported');
     }
@@ -66,10 +64,10 @@ export async function POST(req: Request) {
         temperature: 0.7,
         topP: 0.7,
         topK: 50,
-        // experimental_transform: smoothStream({
-        //     delayInMs: 30, // optional: defaults to 10ms
-        //     chunking: 'word', // optional: defaults to 'word'
-        // }),
+        experimental_transform: smoothStream({
+            delayInMs: 30, // optional: defaults to 10ms
+            chunking: 'word', // optional: defaults to 'word'
+        }),
     });
 
     return result.toDataStreamResponse();

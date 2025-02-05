@@ -78,7 +78,8 @@ export const initialModel = {
     description: "A fast and efficient AI model capable of understanding and generating high-quality text. Perfect for chatbots, translation, and various language-based applications.",
     parameter: "70 Billion Parameters",
     provider: "together",
-    status: "active"
+    status: "active",
+    latency: "medium"
 };
 
 export const listModels = [
@@ -86,10 +87,11 @@ export const listModels = [
         id: 1,
         name: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
         title: "Deepseek R1",
-        description: "An advanced AI model designed for high-accuracy information retrieval and natural language processing. Ideal for data analysis and complex text comprehension.",
+        description: "DeepSeek R1 is here: Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's 671B parameters in size, with 37B active in an inference pass.",
         parameter: "70 Billion Parameters",
         provider: "together",
-        status: "active"
+        status: "active",
+        latency: "medium"
     },
     {
         id: 2,
@@ -98,7 +100,78 @@ export const listModels = [
         description: "A fast and efficient AI model capable of understanding and generating high-quality text. Perfect for chatbots, translation, and various language-based applications.",
         parameter: "70 Billion Parameters",
         provider: "together",
-        status: "active"
+        status: "active",
+        latency: "high"
+    },
+    {
+        id: 3,
+        name: "meta-llama/llama-3.1-405b-instruct:free",
+        title: "Llama 3.1",
+        description: "The highly anticipated 400B class of Llama3 is here! Clocking in at 128k context with impressive eval scores, the Meta AI team continues to push the frontier of open-source LLMs.",
+        parameter: "405 Billion Parameters",
+        provider: "openRouter",
+        status: "active",
+        latency: "low"
+    },
+    {
+        id: 4,
+        name: "google/gemma-2-9b-it:free",
+        title: "Gemma 2",
+        description: "Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance in its size class.",
+        parameter: "9 Billion Parameters",
+        provider: "openRouter",
+        status: "active",
+        latency: "high"
+    },
+    {
+        id: 5,
+        name: "gemini-1.5-pro",
+        title: "Gemini 1.5 Pro",
+        description: "Gemini 1.5 Pro is an AI model designed to deliver high performance in natural language processing and other complex tasks.",
+        parameter: "unknown",
+        provider: "google",
+        status: "inactive",
+        latency: "high"
+    },
+    {
+        id: 6,
+        name: "gemini-2.0-flash-thinking-exp-01-21",
+        title: "Gemini 2.0",
+        description: "Gemini 2.0 is the latest version of the Gemini model that offers improvements in speed and accuracy, ideal for real-time applications.",
+        parameter: "unknown",
+        provider: "google",
+        status: "active",
+        latency: "high"
+    },
+    {
+        id: 7,
+        name: "gemini-1.5-flash",
+        title: "Gemini 1.5",
+        description: "Gemini 1.5 is an AI model that combines natural language processing capabilities with high efficiency, suitable for various applications.",
+        parameter: "unknown",
+        provider: "google",
+        status: "active",
+        latency: "high"
+    },
+    {
+        id: 8,
+        name: "learnlm-1.5-pro-experimental",
+        title: "LearnLM 1.5 Pro",
+        description: "LearnLM 1.5 Pro is an experimental model designed for deep learning, focusing on human interaction and context understanding.",
+        parameter: "unknown",
+        provider: "google",
+        status: "active",
+        latency: "medium"
+    },
+    {
+        id: 9,
+        name: "qwen/qwen-2-7b-instruct:free",
+        title: "Qwen 2",
+        description: "Qwen2 7B is a transformer-based model that excels in language understanding, multilingual capabilities, coding, mathematics, and reasoning.",
+        parameter: "7 Billion Parameters",
+        provider: "openRouter",
+        status: "active",
+        latency: "high"
     },
 ];
 // export const listModels = [
@@ -106,7 +179,7 @@ export const listModels = [
 //         name: "deepseek-ai/DeepSeek-V3",
 //         title: "Deepseek V3",
 //         description: "The best new model at the moment",
-//         parameter: "Unkown",
+//         parameter: "unkown",
 //         provider: "deepinfra",
 //         status: "inactive"
 //     },
@@ -122,7 +195,7 @@ export const listModels = [
 //         name: "gpt-4o-mini",
 //         title: "chatGPT 4o Mini",
 //         description: "The best and most famous model of a million people",
-//         parameter: "Unkown",
+//         parameter: "unkown",
 //         provider: "openai",
 //         status: "inactive"
 //     },
@@ -130,7 +203,7 @@ export const listModels = [
 //         name: "gpt-3.5-turbo",
 //         title: "chatGPT 3.5",
 //         description: "The best and most famous model of a million people",
-//         parameter: "Unkown",
+//         parameter: "unkown",
 //         provider: "openai",
 //         status: "inactive"
 //     },
@@ -138,7 +211,7 @@ export const listModels = [
 //         name: "gemini-1.5-pro",
 //         title: "Gemini 1.5 Pro",
 //         description: "Google's most powerful model at the moment",
-//         parameter: "Unknown",
+//         parameter: "unknown",
 //         provider: "google",
 //         status: "inactive"
 //     },
@@ -146,7 +219,7 @@ export const listModels = [
 //         name: "gemini-2.0-flash-exp",
 //         title: "Gemini 2.0",
 //         description: "The newest model made by Google at the moment",
-//         parameter: "Unknown",
+//         parameter: "unknown",
 //         provider: "google",
 //         status: "inactive"
 //     },
@@ -154,7 +227,7 @@ export const listModels = [
 //         name: "gemini-1.5-flash-8b",
 //         title: "Gemini 1.5",
 //         description: "Google's most powerful model at the moment",
-//         parameter: "Unknown",
+//         parameter: "unknown",
 //         provider: "google",
 //         status: "inactive"
 //     },

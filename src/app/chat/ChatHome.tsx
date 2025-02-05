@@ -68,9 +68,13 @@ const ModelCard = ({ title, description, delay, name, parameter, provider, statu
             <p className='mb-3 text-xs text-zinc-600 dark:text-zinc-500'>{name}</p>
             <p className='mb-4'>{description}</p>
             <ul className='flex flex-wrap gap-1'>
-                <li className='px-4 py-1 bg-zinc-200 dark:bg-zinc-800 text-xs rounded-full'>{parameter}</li>
-                {/* <li className='px-4 py-1 bg-zinc-200 dark:bg-zinc-800 text-xs rounded-full'>{provider} AI</li>
-                <li className='px-4 py-1 bg-green-700 text-white text-xs rounded-full'>{status}</li> */}
+                {parameter !== "unknown" && <li className='px-4 py-1 bg-zinc-200 dark:bg-zinc-800 text-xs rounded-full'>{parameter}</li>}
+                <li className='px-4 py-1 bg-zinc-200 dark:bg-zinc-800 text-xs rounded-full'>{provider}</li>
+                {status === "active" ? (
+                    <li className='px-4 py-1 bg-green-700 text-white text-xs rounded-full'>{status}</li>
+                ) : status === "inactive" && (
+                    <li className='px-4 py-1 bg-red-700 text-white text-xs rounded-full'>{status}</li>
+                )}
             </ul>
         </motion.div>
     )
