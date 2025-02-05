@@ -13,7 +13,7 @@ export function middleware(req: NextRequest) {
   const allowedOrigins = [
     "https://my-web-portofolio-pearl.vercel.app",
     "http://192.168.137.1:3008",
-    "http://192.168.162.52:3008",
+    "http://192.168.228.52:3008",
   ];
   
   if (IS_LOCAL) {

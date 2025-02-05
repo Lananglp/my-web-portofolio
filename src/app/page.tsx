@@ -1,5 +1,5 @@
 'use client'
-import { MessageCircleMore, UserRound } from "lucide-react";
+import { MessageCircleMore, UserRound, Link as LinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -25,6 +25,13 @@ export default function Home() {
     setActivePage(false);
     setTimeout(() => {
       navigate.push("/chat");
+    }, 250);
+  }
+
+  const goToChatWhatsapp = () => {
+    setActivePage(false);
+    setTimeout(() => {
+      navigate.push("/whatsapp-virtual");
     }, 250);
   }
 
@@ -88,10 +95,14 @@ export default function Home() {
                     </div>
                     <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.6, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="mt-4 dark:text-white text-lg text-center">Kadek Lanang Lanusa Putera</motion.h1>
                     <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.7, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="mb-8 text-sm text-center text-zinc-500 dark:text-zinc-300">lananglanusaputera@gmail.com</motion.p>
-                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.8, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="w-full mb-4">
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.8, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="w-full flex flex-col gap-2 mb-4">
                       <Button onClick={goToChat} className="w-full">
-                        <MessageCircleMore className="mb-0.5" />
-                        Live Chat
+                        <LinkIcon className="mb-0.5" />
+                        Lanang AI
+                      </Button>
+                      <Button onClick={goToChatWhatsapp} className="w-full bg-emerald-900 hover:bg-emerald-800 text-white hover:text-white">
+                        <LinkIcon className="mb-0.5" />
+                        Whatsapp AI
                       </Button>
                     </motion.div>
                     <motion.h6 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.9, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-white font-medium text-sm">Social Media</motion.h6>
