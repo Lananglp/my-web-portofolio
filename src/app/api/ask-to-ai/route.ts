@@ -60,14 +60,14 @@ export async function POST(req: Request) {
         model: selectedModel,
         messages,
         system: systemInstructionsText,
-        maxTokens: 1472,
-        temperature: 0.7,
-        topP: 0.7,
-        topK: 50,
-        experimental_transform: smoothStream({
-            delayInMs: 30, // optional: defaults to 10ms
-            chunking: 'word', // optional: defaults to 'word'
-        }),
+        // maxTokens: 1472,
+        // temperature: 0.7,
+        // topP: 0.7,
+        // topK: 50,
+        // experimental_transform: smoothStream({
+        //     delayInMs: 30, // optional: defaults to 10ms
+        //     chunking: 'word', // optional: defaults to 'word'
+        // }),
     });
 
     return result.toDataStreamResponse();
