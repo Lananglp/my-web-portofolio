@@ -71,27 +71,17 @@ export const systemInstructionsText = `
     Ensure that the response language matches the user's query.
 `;
 
-export const initialModel = {
-    id: 2,
-    name: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
-    title: "Llama 3.3",
-    description: "A fast and efficient AI model capable of understanding and generating high-quality text. Perfect for chatbots, translation, and various language-based applications.",
-    parameter: "70 Billion Parameters",
-    provider: "together",
-    status: "active",
-    latency: "medium"
-};
-
 export const listModels = [
     {
         id: 1,
-        name: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
+        // name: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free",
+        name: "deepseek-chat",
         title: "Deepseek R1",
         description: "DeepSeek R1 is here: Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's 671B parameters in size, with 37B active in an inference pass.",
         parameter: "70 Billion Parameters",
-        provider: "together",
+        provider: "deepseek",
         status: "active",
-        latency: "medium"
+        latency: "high"
     },
     {
         id: 2,
@@ -145,6 +135,16 @@ export const listModels = [
     },
     {
         id: 7,
+        name: "gemini-2.0-flash-lite-preview-02-05",
+        title: "Gemini 2.0 Lite",
+        description: "Gemini 2.0 is the latest version of the Gemini model that offers improvements in speed and accuracy, ideal for real-time applications.",
+        parameter: "unknown",
+        provider: "google",
+        status: "active",
+        latency: "high"
+    },
+    {
+        id: 8,
         name: "gemini-1.5-flash",
         title: "Gemini 1.5",
         description: "Gemini 1.5 is an AI model that combines natural language processing capabilities with high efficiency, suitable for various applications.",
@@ -154,7 +154,7 @@ export const listModels = [
         latency: "high"
     },
     {
-        id: 8,
+        id: 9,
         name: "learnlm-1.5-pro-experimental",
         title: "LearnLM 1.5 Pro",
         description: "LearnLM 1.5 Pro is an experimental model designed for deep learning, focusing on human interaction and context understanding.",
@@ -164,7 +164,7 @@ export const listModels = [
         latency: "medium"
     },
     {
-        id: 9,
+        id: 10,
         name: "qwen/qwen-2-7b-instruct:free",
         title: "Qwen 2",
         description: "Qwen2 7B is a transformer-based model that excels in language understanding, multilingual capabilities, coding, mathematics, and reasoning.",
@@ -174,6 +174,9 @@ export const listModels = [
         latency: "high"
     },
 ];
+
+export const initialModel = listModels[9];
+
 // export const listModels = [
 //     {
 //         name: "deepseek-ai/DeepSeek-V3",

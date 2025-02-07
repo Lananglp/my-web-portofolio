@@ -4,6 +4,7 @@ import { google } from '@ai-sdk/google';
 import { openai } from '@ai-sdk/openai';
 import { togetherai } from '@ai-sdk/togetherai';
 import { openrouter } from '@openrouter/ai-sdk-provider';
+import { createDeepSeek } from '@ai-sdk/deepseek';
 import { smoothStream, streamText } from 'ai';
 import { wrapLanguageModel, extractReasoningMiddleware } from 'ai';
 import { NextResponse } from 'next/server';
@@ -38,6 +39,11 @@ export async function POST(req: Request) {
     if (tokenUsage > 12000) {
         return NextResponse.json("Thank you for asking me, but unfortunately Lanang limits long messages because Lanang uses the free features of the existing model.", { status: 400 });
     }
+
+    const deepseek = createDeepSeek({
+        baseURL: 'https://api.deepseek.com/v1',
+        apiKey: process.env.DEEPEEK_API_KEY
+    });
     
     let selectedModel;
     if (provider === 'groq') {
@@ -52,6 +58,8 @@ export async function POST(req: Request) {
         selectedModel = togetherai(model);
     } else if (provider === 'openRouter') {
         selectedModel = openrouter(model);
+    } else if (provider === 'deepseek') {
+        selectedModel = deepseek('deepseek-chat');
     } else {
         throw new Error('Provider not supported');
     }
