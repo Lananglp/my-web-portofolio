@@ -16,7 +16,7 @@ import { useChat } from 'ai/react';
 import { Spotlight } from '@/components/ui/Spotlight-new';
 import ChatHome from './ChatHome';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { initialModel, listModels } from '@/helper/helper';
+import { appVersion, initialModel, listModels } from '@/helper/helper';
 
 interface MessagesType {
     role: "user" | "data" | "system" | "assistant";
@@ -214,7 +214,7 @@ function Chat() {
                     <div className='flex flex-none justify-between items-center backdrop-blur-sm border-b px-4 py-3'>
                         <Button onClick={backHome} className='hover:bg-transparent' variant={'ghost'}><ArrowLeft className='inline h-4 w-4 mb-0.5 me-1' />About me</Button>
                         <div className='flex items-center gap-3'>
-                            <p className='text-sm'>v3.1.4</p>
+                            <p className='text-sm'>v{appVersion}</p>
                             <ToggleThemeButton />
                         </div>
                     </div>

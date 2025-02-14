@@ -163,19 +163,20 @@ export const listModels = [
         status: "active",
         latency: "medium"
     },
-    {
-        id: 10,
-        name: "qwen/qwen-2-7b-instruct:free",
-        title: "Qwen 2",
-        description: "Qwen2 7B is a transformer-based model that excels in language understanding, multilingual capabilities, coding, mathematics, and reasoning.",
-        parameter: "7 Billion Parameters",
-        provider: "openRouter",
-        status: "active",
-        latency: "high"
-    },
+    // {
+    //     id: 10,
+    //     name: "qwen/qwen-2-7b-instruct:free",
+    //     title: "Qwen 2",
+    //     description: "Qwen2 7B is a transformer-based model that excels in language understanding, multilingual capabilities, coding, mathematics, and reasoning.",
+    //     parameter: "7 Billion Parameters",
+    //     provider: "openRouter",
+    //     status: "active",
+    //     latency: "high"
+    // },
 ];
 
-export const initialModel = listModels[9];
+export const initialModel = listModels[5];
+export const appVersion = "3.1.5";
 
 // export const listModels = [
 //     {
