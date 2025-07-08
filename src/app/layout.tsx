@@ -22,8 +22,48 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lananglp's Portofolio",
-  description: "Lananglp's Portofolio",
+  title: {
+    template: '%s - Lanang Lanusa',
+    default: 'Kadek Lanang Lanusa Putera | Web Developer from Bali - Lanang Lanusa', // a default is required when creating a template
+  },
+  description:
+    'Kadek Lanang Lanusa Putera is a frontend developer from Bali with expertise in React, Next.js, Laravel, and modern UI development. Explore his works and complete portfolio here.',
+  keywords: [
+    'Lanang Lanusa',
+    'Kadek Lanang Lanusa Putera',
+    'Web Developer from Bali',
+    'Frontend Developer Indonesia',
+    'Next.js Developer',
+    'React Developer Indonesia',
+    'Web Developer Portfolio',
+    'Young Programmer from Bali',
+  ],
+  authors: [{ name: 'Kadek Lanang Lanusa Putera', url: 'https://lananglanusa.my.id' }],
+  creator: 'Kadek Lanang Lanusa Putera',
+  openGraph: {
+    title: 'Kadek Lanang Lanusa Putera | Web Developer from Bali',
+    description:
+      'Personal portfolio of Kadek Lanang Lanusa Putera, a frontend developer from Bali skilled in Next.js, Laravel, and React. Discover his best projects and contributions.',
+    url: 'https://lananglanusa.my.id',
+    siteName: 'LanangLanusa.my.id',
+    images: [
+      {
+        url: 'https://lananglanusa.my.id/og-image.webp',
+        width: 1200,
+        height: 675,
+        alt: 'Kadek Lanang Lanusa Putera - Web Developer from Bali',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kadek Lanang Lanusa Putera | Web Developer from Bali',
+    description:
+      'Get to know Kadek Lanang Lanusa Putera, a young developer from Bali with expertise in React, Next.js, and Laravel.',
+    images: ['https://lananglanusa.my.id/og-image.webp'],
+  },
 };
 
 export default function RootLayout({

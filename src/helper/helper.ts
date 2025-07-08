@@ -176,7 +176,7 @@ export const listModels = [
 ];
 
 export const initialModel = listModels[5];
-export const appVersion = "3.1.5";
+export const appVersion = "3.2.0";
 
 // export const listModels = [
 //     {
