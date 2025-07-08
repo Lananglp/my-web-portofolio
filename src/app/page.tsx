@@ -197,7 +197,7 @@ export default function Home() {
                         <section className="space-y-6">
                           <header>
                             <h2 className="leading-8">
-                              <span className="text-3xl dark:text-white font-medium">Kadek Lanang Lanusa Putera's Profile</span> <br />
+                              <span className="text-3xl dark:text-white font-medium">Kadek Lanang Lanusa Putera&apos;s Profile</span> <br />
                               - Web Developer from Bali
                             </h2>
                           </header>
@@ -228,7 +228,7 @@ export default function Home() {
                             </p>
 
                             <p>
-                              Some of Lanang’s notable projects include a digital product sales app called "Ternak Income", various websites built with Next.js, and modern UI designs available on GitHub and his portfolio site.
+                              Some of Lanang’s notable projects include a digital product sales app called &quot;Ternak Income&quot;, various websites built with Next.js, and modern UI designs available on GitHub and his portfolio site.
                             </p>
                           </article>
                         </section>
