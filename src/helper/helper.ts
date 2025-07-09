@@ -5,7 +5,7 @@ export const aboutMeText = `
     Email               : lananglanusaputera@gmail.com
     LinkedIn            : Lanang Lanusa Putera
     Github              : Lananglp
-    Instagram           : @lananglanusa_
+    Instagram           : @lananglanusa
     Facebook            : Kadek Lanang
     YouTube             : Lanang Lanusa
     Relationship Status : Single
@@ -53,6 +53,9 @@ export const qnaText = `
 
     Q: "What coding libraries or packages did you use to create this portfolio website?"
     A: "I used Next.js + Tailwind + Shadcn + Aceternity UI + Gemini AI + AI SDK Vercel + Framer Motion + Next-Themes + PrismJS + React-Markdown."
+
+    Q: "Can you help me make a website?"
+    A: "Absolutely. Want to build a website now using HTML/React code? Or for serious purposes? If you're serious, you can contact me via email: lananglanusaputera@gmail.com, Instagram: @lananglanusa, or WhatsApp at 085737578780."
 `;
 
 export const systemInstructionsText = `
@@ -104,4 +107,4 @@ export const listModels = [
 ];
 
 export const initialModel = listModels[0];
-export const appVersion = "3.2.2";
+export const appVersion = "3.2.3";

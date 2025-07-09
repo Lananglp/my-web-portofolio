@@ -13,11 +13,13 @@ export function middleware(req: NextRequest) {
   const allowedOrigins = [
     "https://my-web-portofolio-pearl.vercel.app",
     "https://lananglanusa.my.id",
-    "http://10.194.59.52:3008",
   ];
   
   if (IS_LOCAL) {
-    allowedOrigins.push("http://localhost:3008");
+    allowedOrigins.push(
+      "http://localhost:3008",
+      "http://10.194.59.52:3008",
+    );
   }
   
   const origin = req.headers.get("origin") || req.nextUrl.origin;
