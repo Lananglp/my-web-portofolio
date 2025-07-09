@@ -12,11 +12,11 @@ import { ToggleThemeButton } from '@/components/ToggleThemeButton';
 import * as motion from "motion/react-client"
 import { AnimatePresence } from "motion/react"
 import { useRouter } from 'next/navigation';
-import { useChat } from 'ai/react';
 import { Spotlight } from '@/components/ui/Spotlight-new';
 import ChatHome from './ChatHome';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { appVersion, initialModel, listModels } from '@/helper/helper';
+import { useChat } from '@ai-sdk/react';
 
 interface MessagesType {
     role: "user" | "data" | "system" | "assistant";

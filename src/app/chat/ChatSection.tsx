@@ -25,7 +25,7 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
 
   return (
     <div ref={ref} className="h-full mx-auto max-w-3xl px-3 pt-2">
-      {selectedModel.id === 1 ? show ? (
+      {/* {selectedModel.id === 1 ? show ? (
           <div className='fixed z-10 bottom-36 mx-auto inset-x-0 max-w-3xl mt-6'>
             <div className='bg-zinc-100 dark:bg-zinc-950 rounded-xl text-sm mx-3'>
               <div className='bg-yellow-400/10 rounded-xl ps-6 py-6 pe-16'>
@@ -37,7 +37,7 @@ const ChatSection = forwardRef<HTMLDivElement, ChatSectionProps>((props, ref) =>
         ) : (
           <Button onClick={() => setShow(true)} className='fixed z-10 bottom-36 end-3 mt-6 px-2.5 dark:bg-zinc-800 text-orange-400 rounded-full'><CircleAlert /></Button>
         )
-      : null}
+      : null} */}
       <div className='bg-zinc-500/10 rounded-xl p-6 my-3 text-sm'>
         <p><CircleAlert className='inline h-4 w-4 mb-0.5 me-2 text-orange-400' />The message will not be saved.</p>
       </div>

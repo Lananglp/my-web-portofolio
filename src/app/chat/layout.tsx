@@ -23,7 +23,7 @@ export const metadata: Metadata = {
         siteName: 'LanangLanusa.my.id',
         images: [
             {
-                url: 'https://lananglanusa.my.id/og-image.webp',
+                url: 'https://lananglanusa.my.id/chat-og-image.webp',
                 width: 1200,
                 height: 675,
                 alt: 'Chat with AI – Lanang Lanusa',
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
         title: 'Chat with AI | Free AI Conversations',
         description:
             'Start a free AI conversation now on Lanang Lanusa’s portfolio site, using various AI models via API integrations.',
-        images: ['https://lananglanusa.my.id/og-image.webp'],
+        images: ['https://lananglanusa.my.id/chat-og-image.webp'],
     },
 };
 
