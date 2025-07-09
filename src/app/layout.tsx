@@ -4,6 +4,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react"
 import ReduxProvider from "./ReduxProvider";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -88,6 +89,7 @@ export default function RootLayout({
           </ThemeProvider>
         </ReduxProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

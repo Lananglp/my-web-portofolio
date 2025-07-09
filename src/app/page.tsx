@@ -124,7 +124,7 @@ export default function Home() {
                       <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1.2, type: 'spring', visualDuration: 0.3, bounce: 0.6 }}>
                         <Link href="https://www.instagram.com/lananglanusa/" target="_blank" className="inline-block dark:hover:text-white hover:underline transition duration-300 text-sm">
                           <FaInstagram className="inline text-xl mb-0.5 me-2" />
-                          lananglanusa_
+                          lananglanusa
                         </Link>
                       </motion.li>
                       <motion.li initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 1.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }}>
@@ -356,6 +356,15 @@ export default function Home() {
                       {/* <p className="bg-zinc-200/50 dark:bg-zinc-800/50 rounded-md text-sm p-4">I also possess skills in audio recording, mixing, and music production using <Link href="https://www.image-line.com/" target="_blank" className="text-white underline underline-offset-4">FL Studio</Link>, allowing me to create professional-quality soundtracks and compositions.</p> */}
                       <motion.h6 initial={{ opacity: 0, y: 10 }} viewport={{ amount: 0.8, once: true }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3, type: 'spring', visualDuration: 0.3, bounce: 0.6 }} className="pb-2 mb-4 border-b border-zinc-300 dark:border-zinc-800 dark:text-zinc-400">portfolio project</motion.h6>
                       <ul className="flex flex-col gap-2 text-sm">
+                        <li>
+                          <Link href="https://next-blog-v3-delta.vercel.app" target="_blank" className="w-full border border-zinc-300 dark:border-zinc-800 hover:text-black hover:dark:text-white rounded-xl p-4 flex items-center gap-4">
+                            <GlobeIcon className="text-zinc-400 size-6" />
+                            <div>
+                              <p className="text-base font-medium">Next Blog Template v3</p>
+                              <p className="text-zinc-400 line-clamp-1">https://next-blog-v3-delta.vercel.app</p>
+                            </div>
+                          </Link>
+                        </li>
                         <li>
                           <Link href="https://next-rekan-kamu.vercel.app/login" target="_blank" className="w-full border border-zinc-300 dark:border-zinc-800 hover:text-black hover:dark:text-white rounded-xl p-4 flex items-center gap-4">
                             <GlobeIcon className="text-zinc-400 size-6" />
