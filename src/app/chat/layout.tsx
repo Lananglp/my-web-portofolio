@@ -1,24 +1,20 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: 'Chat with AI | Free AI Conversations',
+    title: 'AI Chat Demo',
     description:
-        'Experience free AI-powered chat conversations on Kadek Lanang Lanusa Putera’s portfolio website. Try out various AI models and enjoy multilingual support.',
+        'Interactive AI chat feature built with Next.js as part of Lanang Lanusa’s portfolio. Explore multi-model AI integration and real-time responses.',
     keywords: [
-        'AI chat',
-        'free AI',
-        'AI conversation',
-        'AI chatbot',
-        'Kadek Lanang Lanusa',
-        'Next.js AI chat',
-        'AI on portfolio site',
+        'AI chat demo',
+        'Next.js AI integration',
+        'AI chatbot portfolio project',
     ],
     authors: [{ name: 'Kadek Lanang Lanusa Putera', url: 'https://lananglanusa.my.id' }],
     creator: 'Kadek Lanang Lanusa Putera',
     openGraph: {
-        title: 'Chat with AI | Free AI Conversations',
+        title: 'AI Chat Demo - Lanang Lanusa',
         description:
-            'Try out free AI chat on Lanang Lanusa’s portfolio. Powered by multiple AI models, no registration needed.',
+            'Interactive AI chat feature built with Next.js as part of Lanang Lanusa’s portfolio. Explore multi-model AI integration and real-time responses.',
         url: 'https://lananglanusa.my.id/chat',
         siteName: 'LanangLanusa.my.id',
         images: [
@@ -34,9 +30,9 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Chat with AI | Free AI Conversations',
+        title: 'AI Chat Demo - Lanang Lanusa',
         description:
-            'Start a free AI conversation now on Lanang Lanusa’s portfolio site, using various AI models via API integrations.',
+            'Interactive AI chat feature built with Next.js as part of Lanang Lanusa’s portfolio. Explore multi-model AI integration and real-time responses.',
         images: ['https://lananglanusa.my.id/chat-og-image.webp'],
     },
 };

@@ -25,26 +25,23 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     template: '%s - Lanang Lanusa',
-    default: 'Kadek Lanang Lanusa Putera | Web Developer from Bali - Lanang Lanusa', // a default is required when creating a template
+    default: 'Lanang Lanusa | Web Developer Bali (Next.js)',
   },
   description:
-    'Kadek Lanang Lanusa Putera is a frontend developer from Bali with expertise in React, Next.js, Laravel, and modern UI development. Explore his works and complete portfolio here.',
+    'Personal website of Lanang Lanusa, a Bali-based web developer working with Next.js to build clean and modern web experiences. See projects, services, and more.',
   keywords: [
     'Lanang Lanusa',
     'Kadek Lanang Lanusa Putera',
     'Web Developer from Bali',
     'Frontend Developer Indonesia',
     'Next.js Developer',
-    'React Developer Indonesia',
-    'Web Developer Portfolio',
-    'Young Programmer from Bali',
   ],
   authors: [{ name: 'Kadek Lanang Lanusa Putera', url: 'https://lananglanusa.my.id' }],
   creator: 'Kadek Lanang Lanusa Putera',
   openGraph: {
-    title: 'Kadek Lanang Lanusa Putera | Web Developer from Bali',
+    title: 'Lanang Lanusa | Web Developer Bali (Next.js)',
     description:
-      'Personal portfolio of Kadek Lanang Lanusa Putera, a frontend developer from Bali skilled in Next.js, Laravel, and React. Discover his best projects and contributions.',
+      'Personal website of Lanang Lanusa, a Bali-based web developer working with Next.js to build clean and modern web experiences. See projects, services, and more.',
     url: 'https://lananglanusa.my.id',
     siteName: 'LanangLanusa.my.id',
     images: [
@@ -60,9 +57,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kadek Lanang Lanusa Putera | Web Developer from Bali',
+    title: 'Lanang Lanusa | Web Developer Bali (Next.js)',
     description:
-      'Get to know Kadek Lanang Lanusa Putera, a young developer from Bali with expertise in React, Next.js, and Laravel.',
+      'Personal website of Lanang Lanusa, a Bali-based web developer working with Next.js to build clean and modern web experiences. See projects, services, and more.',
     images: ['https://lananglanusa.my.id/og-image.webp'],
   },
 };
@@ -76,6 +73,38 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="canonical" href="https://lananglanusa.my.id" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Person",
+                name: "Kadek Lanang Lanusa Putera",
+                alternateName: "Lanang Lanusa",
+                url: "https://lananglanusa.my.id",
+                sameAs: [
+                  "https://www.youtube.com/@lananglanusa",
+                  "https://soundcloud.com/lanang-lanusa-putera"
+                ],
+                jobTitle: "Web Developer",
+                address: {
+                  "@type": "PostalAddress",
+                  addressLocality: "Bali",
+                  addressCountry: "ID"
+                }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "Lanang Lanusa",
+                url: "https://lananglanusa.my.id",
+                description:
+                  "Personal website of Lanang Lanusa, a Bali-based web developer working with Next.js to build clean and modern web experiences."
+              }
+            ]),
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.className} antialiased`}
