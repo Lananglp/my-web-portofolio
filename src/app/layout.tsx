@@ -78,7 +78,7 @@ export default function RootLayout({
         <link rel="canonical" href="https://lananglanusa.my.id" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${poppins.className} antialiased`}
       >
         <ReduxProvider>
           <ThemeProvider

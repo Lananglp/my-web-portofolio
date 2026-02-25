@@ -1,5 +1,7 @@
-module.exports = {
-    async redirects() {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  async redirects() {
         return [
             {
                 source: '/:path*',
@@ -49,7 +51,9 @@ module.exports = {
             },
         ],
     },
-}
+};
+
+export default nextConfig;
 
 // import type { NextConfig } from "next";
 

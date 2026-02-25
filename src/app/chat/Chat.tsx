@@ -1,13 +1,9 @@
 'use client'
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, CircleAlert, CircleX, LoaderCircle, MoveDown, RadioTower, RotateCw, Send, Wifi } from 'lucide-react';
+import { ArrowLeft, CircleAlertIcon, CircleX, LoaderCircle, MoveDown, Send, Wifi } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react'
 import ChatSection from './ChatSection';
-import { addChatHistory } from '../globalState/chatHistorySlice';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux';
 import { ToggleThemeButton } from '@/components/ToggleThemeButton';
 import * as motion from "motion/react-client"
 import { AnimatePresence } from "motion/react"
@@ -15,13 +11,10 @@ import { useRouter } from 'next/navigation';
 import { Spotlight } from '@/components/ui/Spotlight-new';
 import ChatHome from './ChatHome';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { appVersion, initialModel, listModels } from '@/helper/helper';
+import { appVersion, initialModel, listModels, maxMessage } from '@/helper/helper';
 import { useChat } from '@ai-sdk/react';
-
-interface MessagesType {
-    role: "user" | "data" | "system" | "assistant";
-    content: string;
-}
+import { DefaultChatTransport } from 'ai';
+import { MyUIMessage } from '../types';
 
 export interface ModelType {
     id: number;
@@ -35,42 +28,40 @@ export interface ModelType {
 }
 
 function Chat() {
+    const [input, setInput] = useState<string>('');
     const [selectedModel, setSelectedModel] = useState<ModelType>(initialModel);
     const [yourTokenUsage, setYourTokenUsage] = useState<number>(0);
-    const { messages, input, handleSubmit, isLoading, setInput, error, reload, stop } = useChat({
-        api: '/api/ask-to-ai',
-        body: {
-            model: selectedModel ? selectedModel.name : initialModel.name,
-            provider: selectedModel ? selectedModel.provider : initialModel.provider,
-            tokenUsage: yourTokenUsage
-        },
-        onFinish: (message, { usage, finishReason }) => {
-            console.log('Finished streaming message:', message);
-            console.log('Token usage:', usage.totalTokens);
-            console.log('Finish reason:', finishReason);
-            setYourTokenUsage(usage.totalTokens);
+    const { messages, status, regenerate, error, stop, sendMessage } = useChat<MyUIMessage>({
+        transport: new DefaultChatTransport({
+            api: '/api/ask-to-ai',
+            credentials: 'same-origin',
+        }),
+        onFinish: (options) => {
+            const totalAllTokens = options.messages.reduce((acc, message) => {
+                if (message.metadata?.totalTokens) {
+                    return acc + message.metadata.totalTokens;
+                }
+                return acc;
+            }, 0);
+            setYourTokenUsage(totalAllTokens || 0); 
         },
         onError: error => {
-            // const isError: any = error?.message;
-            // if (isError.error) {
-            //     console.error('isError:', JSON.parse(isError.error) || isError);
-            //     setErrorMessage(isError.error);
-            // } else {
-            //     console.error('An error occurred:', error?.message || error);
-            // }
             console.error('An error occurred:', error?.message || error);
-        },
-        onResponse: response => {
-            console.log('Received HTTP response from server:', response);
+            setTimeout(() => {
+                scrollToBottom();
+            }, 500);
         },        
     });
+    const totalResponse = messages.filter(msg => msg.role === 'user').length;
+    const isResponseLimit = totalResponse >= maxMessage;
+    const bottomRef = useRef<HTMLDivElement | null>(null);
+    const [isAutoScroll, setIsAutoScroll] = useState(true);
+    const isLoading = status === 'submitted' || status === 'streaming';
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isAtBottom, setIsAtBottom] = useState<boolean>(true);
     const [activePage, setActivePage] = useState<boolean>(true);
     const [textareaHeight, setTextareaHeight] = useState<number>(0);
-    const dispatch = useDispatch();
-    const chatHistory = useSelector((state: RootState) => state.chatHistory.chat);
     const navigate = useRouter();
 
     const backHome = () => {
@@ -99,23 +90,28 @@ function Chat() {
         adjustTextareaHeight();
     }, [input]);
 
-    const handleSendMessage = async (e?: React.FormEvent<HTMLFormElement>) => {
+    const handleSendMessage = () => {
         if (!input.trim()) return;
-        handleAddHistory("user", input);
-        try {
-            await handleSubmit(e);
-        } catch (error) {
-            console.error('Error fetching AI response:', error);
-        } finally {
-            if (textareaRef.current) {
-                textareaRef.current.blur();
-            }
-            scrollToBottom();
+        
+        if (isLoading || isResponseLimit) {
+            return
         }
-    };
 
-    const handleAddHistory = (role: "user" | "data" | "system" | "assistant", content: string) => {
-        dispatch(addChatHistory({ role: role, content: content }));
+        sendMessage({
+            role: "user",
+            parts: [{ type: "text", text: input }],
+        }, {
+            body: {
+                model: selectedModel ? selectedModel.name : initialModel.name,
+                provider: selectedModel ? selectedModel.provider : initialModel.provider,
+                totalTokenUsage: yourTokenUsage
+            }
+        });
+
+        setInput('');
+        if (textareaRef.current) {
+            textareaRef.current.blur();
+        }
     };
 
     const scrollToBottom = () => {
@@ -127,28 +123,38 @@ function Chat() {
         }
     };
 
-    const isMessage = messages.length > 0;
+    useEffect(() => {
+        const container = scrollRef.current;
+        if (!container) return;
+
+        const handleScroll = () => {
+            const distanceFromBottom =
+                container.scrollHeight -
+                container.scrollTop -
+                container.clientHeight;
+
+            // kalau user menjauh → matikan
+            if (distanceFromBottom > 20) {
+                setIsAutoScroll(false);
+                setIsAtBottom(false);
+            } else {
+                setIsAutoScroll(true);
+                setIsAtBottom(true);
+            }
+        };
+
+        container.addEventListener("scroll", handleScroll);
+        return () => container.removeEventListener("scroll", handleScroll);
+    }, []);
 
     useEffect(() => {
-        const handleScroll = () => {
-            if (scrollRef.current) {
-                const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-                setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 5);
-            }
+        const container = scrollRef.current;
+        if (!container) return;
 
-        };
-
-        if (scrollRef.current) {
-            scrollRef.current.addEventListener("scroll", handleScroll);
-            handleScroll();
+        if (status === "streaming" && isAutoScroll) {
+            container.scrollTop = container.scrollHeight;
         }
-
-        return () => {
-            if (scrollRef.current) {
-                scrollRef.current.removeEventListener("scroll", handleScroll);
-            }
-        };
-    }, [scrollRef, isMessage]);
+    }, [messages, status, isAutoScroll]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -226,8 +232,9 @@ function Chat() {
                                 selectedModel={selectedModel}
                                 loading={isLoading}
                                 error={error}
-                                reload={reload}
-                                stop={stop}
+                                isResponseLimit={isResponseLimit}
+                                // reload={reload}
+                                // stop={stop}
                             />
                         ) : (
                             <ChatHome
@@ -239,12 +246,14 @@ function Chat() {
                                 isMobile={isMobile}
                             />
                         )}
+                        
+                        <div ref={bottomRef} />
                     </div>
 
                     {messages.length > 0 &&
                         <div className="relative flex-none w-full mx-auto max-w-3xl px-4 pb-4 pt-14">
                             {!isAtBottom &&
-                                <div onClick={scrollToBottom} style={{ bottom: `${textareaHeight + 64}px` }} className="absolute start-1/2 -translate-x-1/2 z-10 backdrop-blur-sm bg-zinc-100/75 hover:bg-zinc-100 dark:bg-zinc-700/75 dark:hover:bg-zinc-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer">
+                                <div onClick={scrollToBottom} style={{ bottom: `${textareaHeight + 64}px` }} className="absolute start-1/2 -translate-x-1/2 z-10 backdrop-blur-sm bg-neutral-100/75 hover:bg-neutral-100 dark:bg-neutral-700/75 dark:hover:bg-neutral-700 hover:text-black dark:hover:text-white rounded-full shadow-lg p-4 transition duration-200 hover:scale-105 hover:cursor-pointer">
                                     <MoveDown className='h-4 w-4' />
                                 </div>
                             }
@@ -258,11 +267,11 @@ function Chat() {
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
                                             {listModels.map((model, index) => (
-                                                <DropdownMenuItem key={index} onClick={() => setSelectedModel(model)} className={`${model.name === selectedModel.name ? 'bg-zinc-200/50 dark:bg-zinc-800/50' : ''}`} disabled={model.status === 'inactive' ? true : false}>
+                                                <DropdownMenuItem key={index} onClick={() => setSelectedModel(model)} className={`${model.name === selectedModel.name ? 'bg-neutral-200/50 dark:bg-neutral-800/50' : ''}`} disabled={model.status === 'inactive' ? true : false}>
                                                     {model.title}
                                                     {/* &nbsp; */}
-                                                    {model.name === initialModel.name && <span className='text-xs text-zinc-600 dark:text-zinc-500'>(default)</span>}
-                                                    {model.status === 'inactive' && <span className='text-xs text-zinc-600 dark:text-zinc-500'>(not available)</span>}
+                                                    {model.name === initialModel.name && <span className='text-xs text-neutral-600 dark:text-neutral-500'>(default)</span>}
+                                                    {model.status === 'inactive' && <span className='text-xs text-neutral-600 dark:text-neutral-500'>(not available)</span>}
                                                 </DropdownMenuItem>
                                             ))}
                                         </DropdownMenuContent>
@@ -281,18 +290,28 @@ function Chat() {
                                         }
                                     </p>
                                 </div>
-                                {isLoading &&
-                                    <Button onClick={() => stop()} title='Stop Generate' variant={'outline'} size={'sm'}>
-                                        <CircleX />Stop
-                                    </Button>
-                                }
-                                {error &&
+                                <div className='flex flex-wrap items-center gap-2'>
+                                    {status === "streaming" &&
+                                        <Button onClick={() => stop()} title='Stop Generate' variant={'outline'} size={'sm'}>
+                                            <CircleX />Stop
+                                        </Button>
+                                    }
+                                    {/* {status === "streaming" ? (
+                                            <Button onClick={() => stop()} title='Stop Generate' variant={'outline'} size={'sm'}>
+                                                <CircleX />Stop
+                                            </Button>
+                                        ) : (
+                                            <div className='text-xs'>Chat limit: <span className={`font-semibold ${isResponseLimit ? 'text-red-500' : ''}`}>{totalResponse}/{maxMessage}</span></div>
+                                        )
+                                    } */}
+                                    {/* {error &&
                                     <Button onClick={() => reload()} title='Regenerate' variant={'outline'} size={'sm'}>
                                         <RotateCw />Reload
                                     </Button>
-                                }
+                                } */}
+                                </div>
                             </div>
-                            <form className='relative rounded-3xl overflow-hidden' onSubmit={handleSendMessage}>
+                            <form className='relative rounded-3xl overflow-hidden'>
                                 <Textarea
                                     ref={textareaRef}
                                     value={input}
@@ -301,6 +320,7 @@ function Chat() {
                                     placeholder="Ask something about me..."
                                     rows={2}
                                     // disabled={isLoading}
+                                    disabled={isResponseLimit}
                                     onKeyDown={(e) => {
                                         if (!isMobile && e.key === 'Enter' && !e.shiftKey) {
                                             e.preventDefault();
@@ -309,11 +329,12 @@ function Chat() {
                                     }}
                                 />
                                 <Button
-                                    type="submit"
-                                    disabled={isLoading}
-                                    className="absolute bottom-5 md:bottom-4 right-4 rounded-full w-10 h-10 disabled:opacity-50 hover:scale-105 transition duration-200 shadow-xl shadow-zinc-300/25 hover:shadow-zinc-300/50"
+                                    type="button"
+                                    onClick={handleSendMessage}
+                                    disabled={status === "submitted" || status === "streaming" || isResponseLimit}
+                                    className="absolute bottom-5 md:bottom-4 right-4 rounded-full w-10 h-10 disabled:opacity-50 hover:scale-105 transition duration-200 shadow-xl shadow-neutral-300/25 hover:shadow-neutral-300/50"
                                 >
-                                    {isLoading ? (
+                                    {status === "submitted" || status === "streaming" ? (
                                         <LoaderCircle className="animate-spin" />
                                     ) : (
                                         <Send />

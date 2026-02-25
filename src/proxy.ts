@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { maxMessage } from "./helper/helper";
 
-const MAX_REQUESTS = 50;
+const MAX_REQUESTS = maxMessage;
 const COOLDOWN_TIME = 30 * 60 * 1000;
 const IS_LOCAL = process.env.IS_LOCAL === "true";
 const COOKIE_NAME = "__gj4wt02w9rsoj2";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   if (req.method !== "POST") {
     return NextResponse.json("Method not allowed", { status: 405 });
   }
@@ -18,7 +19,6 @@ export function middleware(req: NextRequest) {
   if (IS_LOCAL) {
     allowedOrigins.push(
       "http://localhost:3008",
-      "http://10.194.59.52:3008",
     );
   }
   
@@ -42,7 +42,7 @@ export function middleware(req: NextRequest) {
   if (requestData.count >= MAX_REQUESTS) {
     const timePassed = now - requestData.lastRequestTime;
     if (timePassed < COOLDOWN_TIME) {
-      return NextResponse.json("You have reached the maximum conversation limit, please try again in 30 minutes.", { status: 429 });
+      return NextResponse.json("You have reached the maximum response limit, please try again in 30 minutes.", { status: 429 });
     } else {
       requestData.count = 0;
     }

@@ -1,57 +1,115 @@
-'use client'
-import { useChat } from 'ai/react';
-import React, { useState } from 'react'
-import { Button } from '@/components/ui/button';
-import { initialModel } from '@/helper/helper';
-import { ModelType } from '../chat/Chat';
+"use client";
 
-function TestPage() {
-    const [selectedModel, setSelectedModel] = useState<ModelType>(initialModel);
-    const { messages, input, handleSubmit, isLoading, setInput, error, reload, stop } = useChat({
-        api: '/api/ask-to-ai',
-        body: {
-            model: selectedModel ? selectedModel.name : initialModel.name,
-            provider: selectedModel ? selectedModel.provider : initialModel.provider
-        },
-        onFinish: (message, { usage, finishReason }) => {
-            console.log('Finished streaming message:', message);
-            console.log('Token usage:', usage);
-            console.log('Finish reason:', finishReason);
-        },
-        onError: error => {
-            console.error('An error occurred:', error);
-        },
-        onResponse: response => {
-            console.log('Received HTTP response from server:', response);
-        },
+import { useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { notFound } from "next/navigation";
+
+export default function ChatPage() {
+    if (process.env.NODE_ENV === "production") {
+        notFound();
+    }
+    const [input, setInput] = useState("");
+
+    const {
+        messages,
+        sendMessage,
+        status,
+        stop,
+        regenerate,
+        error,
+    } = useChat({
+        // api: "/api/chat",
+        // streamProtocol: 'text',
+        transport: new DefaultChatTransport({
+            api: '/api/ask-to-ai',
+            credentials: 'same-origin',
+        })
     });
 
+    // console.log(input);
+    console.log("loading: ", status);
+    // console.log(messages);
+    
+    
+
+    console.log(error);
+    
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!input.trim()) return;
+
+        sendMessage({
+            role: "user",
+            parts: [{ type: "text", text: input }],
+        });
+
+        setInput("");
+    };
+
     return (
-        <div>
-            <h1>Test Page</h1>
-            <form onSubmit={handleSubmit}>
-                <textarea
-                    className='w-96 border'
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    placeholder="Type something..."
-                    rows={8}
-                />
-                <Button type="submit" disabled={isLoading} className='block w-96'>
-                    {isLoading ? 'Loading...' : 'Submit'}
-                </Button>
-            </form>
-            <div className='w-96 border min-h-96'>
-                <p>Messages:</p>
-                {messages.map(message => (
-                    <div key={message.id}>
-                        {message.role === 'user' ? 'user: ' : 'assistant: '}
-                        {message.content}
+        <div className="max-w-xl mx-auto p-6 space-y-6">
+            <h1 className="text-2xl font-bold">AI Chat v6</h1>
+
+            <div className="space-y-4">
+                {messages.map((msg) => (
+                    <div
+                        key={msg.id}
+                        className={`p-3 rounded ${msg.role === "user"
+                                ? "bg-blue-500 text-white ml-auto w-fit"
+                                : "bg-gray-200 text-black w-fit"
+                            }`}
+                    >
+                        {msg.parts.map((part, idx) =>
+                            part.type === "text" ? (
+                                <span key={idx}>{part.text}</span>
+                            ) : null
+                        )}
                     </div>
                 ))}
             </div>
-        </div>
-    )
-}
 
-export default TestPage
+            {error && (
+                <div className="text-red-500 text-sm">
+                    Error: {error.message}
+                </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="flex gap-2">
+                <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="flex-1 border rounded px-3 py-2"
+                    placeholder="Tulis pesan..."
+                />
+
+                {status === "streaming" ? (
+                    <button
+                        type="button"
+                        onClick={stop}
+                        className="bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                        Stop
+                    </button>
+                ) : (
+                    <button
+                        type="submit"
+                        className="bg-black text-white px-4 py-2 rounded"
+                    >
+                        Kirim
+                    </button>
+                )}
+            </form>
+
+            {/* {status === "ready" && messages.length > 0 && (
+                <button
+                    onClick={regenerate}
+                    className="text-sm underline"
+                >
+                    Regenerate
+                </button>
+            )} */}
+        </div>
+    );
+}

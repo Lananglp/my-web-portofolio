@@ -1,24 +1,28 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+  // 1. Konfigurasi Global Ignores (Folder yang tidak perlu di-scan)
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+    "node_modules/**", // Tambahan standar
+  ]),
 
-const baseConfigs = compat.extends("next/core-web-vitals", "next/typescript");
-
-const eslintConfig = [
-  ...baseConfigs,
+  // 2. Custom Rules (Tempat menaruh aturan "off" Anda)
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": "off",
+      "react/no-unescaped-entities": "off", // Opsional: sering berguna di Next.js
     },
   },
-];
+]);
 
 export default eslintConfig;

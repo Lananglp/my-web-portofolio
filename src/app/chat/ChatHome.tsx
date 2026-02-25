@@ -42,7 +42,7 @@ const Card = ({ title, description, delay }: CardType) => {
                 visualDuration: 0.4,
                 bounce: 0.5
             }}
-            className='bg-zinc-200/50 dark:bg-zinc-900/50 p-3 rounded-lg text-start'
+            className='bg-background p-3 rounded-lg text-start'
         >
             <h3 className='mb-2 dark:text-white text-sm font-semibold'>{title}</h3>
             <p className='text-xs'>{description}</p>
@@ -62,14 +62,14 @@ const ModelCard = ({ title, description, delay, name, parameter, provider, statu
                 visualDuration: 0.4,
                 bounce: 0.5
             }}
-            className='bg-zinc-200/50 dark:bg-zinc-900/50 p-3 md:p-6 rounded-lg text-start'
+            className='bg-background p-3 md:p-6 rounded-lg text-start'
         >
             <h3 className='mb-1 dark:text-white text-lg font-medium'>{title}</h3>
-            <p className='mb-3 text-xs text-zinc-600 dark:text-zinc-500'>{name}</p>
+            <p className='mb-3 text-xs text-neutral-600 dark:text-neutral-500'>{name}</p>
             <p className='mb-4'>{description}</p>
             <ul className='flex flex-wrap gap-1'>
-                {parameter !== "unknown" && <li className='px-4 py-1 bg-zinc-200 dark:bg-zinc-800 text-xs rounded-full'>{parameter}</li>}
-                <li className='px-4 py-1 bg-zinc-200 dark:bg-zinc-800 text-xs rounded-full'>{provider}</li>
+                {parameter !== "unknown" && <li className='px-4 py-1 bg-neutral-200 dark:bg-neutral-800 text-xs rounded-full'>{parameter}</li>}
+                <li className='px-4 py-1 bg-neutral-200 dark:bg-neutral-800 text-xs rounded-full'>{provider}</li>
                 {status === "active" ? (
                     <li className='px-4 py-1 bg-green-700 text-white text-xs rounded-full'>{status}</li>
                 ) : status === "inactive" && (
@@ -101,9 +101,9 @@ function ChatHome({ handleSendMessage, textareaRef, input, handleInputChange, is
                 // }}
                 >
                     <div className="flex md:justify-center items-center gap-1.5 mt-12 xl:mt-28 mb-4">
-                        <div className="w-3 h-3 rounded-full bg-zinc-500 animate-pulse" />
-                        <div className="w-3 h-3 rounded-full bg-zinc-600 animate-pulse delay-150" />
-                        <div className="w-3 h-3 rounded-full bg-zinc-700 animate-pulse delay-300" />
+                        <div className="w-3 h-3 rounded-full bg-neutral-500 animate-pulse" />
+                        <div className="w-3 h-3 rounded-full bg-neutral-600 animate-pulse delay-150" />
+                        <div className="w-3 h-3 rounded-full bg-neutral-700 animate-pulse delay-300" />
                     </div>
 
                     <motion.div
@@ -113,7 +113,7 @@ function ChatHome({ handleSendMessage, textareaRef, input, handleInputChange, is
                             duration: 2,
                             delay: 6
                         }}
-                        className='fixed z-10 pointer-events-none inset-0 bg-zinc-100 dark:bg-black'
+                        className='fixed z-10 pointer-events-none inset-0 bg-neutral-100 dark:bg-black'
                     >
                         <motion.span
                             initial={{ opacity: 0 }}
@@ -186,7 +186,7 @@ function ChatHome({ handleSendMessage, textareaRef, input, handleInputChange, is
                         visualDuration: 0.4,
                         bounce: 0.5
                     }}
-                    className='relative rounded-3xl overflow-hidden border dark:border-zinc-800'
+                    className='relative rounded-3xl overflow-hidden border dark:border-neutral-800'
                     onSubmit={handleSendMessage}
                 >
                     <Textarea
@@ -207,7 +207,7 @@ function ChatHome({ handleSendMessage, textareaRef, input, handleInputChange, is
                     <Button
                         type="submit"
                         disabled={isLoading}
-                        className="absolute bottom-5 md:bottom-4 right-4 rounded-full w-10 h-10 disabled:opacity-50 hover:scale-105 transition duration-200 shadow-xl shadow-zinc-300/25 hover:shadow-zinc-300/50"
+                        className="absolute bottom-5 md:bottom-4 right-4 rounded-full w-10 h-10 disabled:opacity-50 hover:scale-105 transition duration-200 shadow-xl shadow-neutral-300/25 hover:shadow-neutral-300/50"
                     >
                         {isLoading ? (
                             <LoaderCircle className="animate-spin" />
@@ -226,7 +226,7 @@ function ChatHome({ handleSendMessage, textareaRef, input, handleInputChange, is
                         visualDuration: 0.4,
                         bounce: 0.5
                     }}
-                    className='mt-4 text-xs text-zinc-500'
+                    className='mt-4 text-xs text-neutral-500'
                 >
                     <CircleAlert className='inline h-4 w-4 mb-0.5 me-0.5 text-orange-400' /> The message will not be saved.
                 </motion.p>

@@ -1,82 +1,100 @@
-import { groq } from '@ai-sdk/groq';
-import { deepinfra } from '@ai-sdk/deepinfra';
 import { google } from '@ai-sdk/google';
-import { openai } from '@ai-sdk/openai';
-import { togetherai } from '@ai-sdk/togetherai';
-import { openrouter } from '@openrouter/ai-sdk-provider';
-import { createDeepSeek } from '@ai-sdk/deepseek';
-import { smoothStream, streamText } from 'ai';
-import { wrapLanguageModel, extractReasoningMiddleware } from 'ai';
+import { streamText, UIMessage, convertToModelMessages, smoothStream } from 'ai';
 import { NextResponse } from 'next/server';
-import { systemInstructionsText } from '@/helper/helper';
+import { maxToken, systemInstructionsText, systemInstructionsTextLite } from '@/helper/helper';
+import { createOpenAI } from '@ai-sdk/openai';
+import { MyUIMessage } from '@/app/types';
 
-interface MessagesType {
-    role: "user" | "data" | "system" | "assistant";
-    content: string;
-}
+export const runtime = "nodejs"; // jika testing pakai local ai LM Studio
 
 export async function POST(req: Request) {
     const {
         messages,
         model,
         provider,
-        tokenUsage
+        totalTokenUsage
     }: {
-        messages: MessagesType[],
+        messages: MyUIMessage[],
         model: string,
         provider: string,
-        tokenUsage: number
+        totalTokenUsage: number
     } = await req.json();
 
-    const latestUserMessage = messages.slice().reverse().find(msg => msg.role === "user");
+    const latestUserMessage = [...messages].reverse().find(
+        (msg) => msg.role === "user"
+    );
 
     if (latestUserMessage) {
-        if (latestUserMessage.content.length > 900) {
-            return NextResponse.json("The message you provided is too long.", { status: 400 });
+        const totalTextLength = latestUserMessage.parts
+            .filter((part) => part.type === "text")
+            .map((part) => part.text)
+            .join("")
+            .length;
+
+        if (totalTextLength > 900) {
+            return NextResponse.json(
+                { error: "The message you provided is too long." },
+                { status: 400 }
+            );
         }
     }
 
-    if (tokenUsage > 12000) {
-        return NextResponse.json("Thank you for asking me, but unfortunately Lanang limits long messages because Lanang uses the free features of the existing model.", { status: 400 });
+    if (totalTokenUsage > maxToken) {
+        return NextResponse.json(`You have reached the maximum token limit, your token amount is: ${totalTokenUsage}`, { status: 400 });
     }
 
-    const deepseek = createDeepSeek({
-        baseURL: 'https://api.deepseek.com/v1',
-        apiKey: process.env.DEEPEEK_API_KEY
+    // return NextResponse.json("OK", { status: 200 });
+
+    const customModel = createOpenAI({
+        // baseURL: "http://localhost:1234/v1",
+        // apiKey: "lm-studio", // bebas isi apa saja
+        baseURL: "https://router.huggingface.co/v1",
+        apiKey: process.env.HF_TOKEN,
     });
     
     let selectedModel;
-    if (provider === 'groq') {
-        selectedModel = groq(model);
-    } else if (provider === 'deepinfra') {
-        selectedModel = deepinfra(model);
-    } else if (provider === 'google') {
+
+    if (provider === 'google') {
         selectedModel = google(model);
-    } else if (provider === 'openai') {
-        selectedModel = openai(model);
-    } else if (provider === 'together') {
-        selectedModel = togetherai(model);
-    } else if (provider === 'openRouter') {
-        selectedModel = openrouter(model);
-    } else if (provider === 'deepseek') {
-        selectedModel = deepseek('deepseek-chat');
+    } else if (provider === 'hunggingface') {
+        selectedModel = customModel.chat(model);
     } else {
         throw new Error('Provider not supported');
     }
 
     const result = streamText({
         model: selectedModel,
-        messages,
-        system: systemInstructionsText,
+        // model: google('gemini-flash-lite-latest'),
+        // model: customModel.chat('google/gemma-3-4b'),
+        // model: customModel.chat('Qwen/Qwen2.5-7B-Instruct:together'),
+        messages: await convertToModelMessages(messages),
+        system: systemInstructionsTextLite,
         // maxTokens: 1472,
         // temperature: 0.7,
         // topP: 0.7,
         // topK: 50,
-        // experimental_transform: smoothStream({
-        //     delayInMs: 30, // optional: defaults to 10ms
-        //     chunking: 'word', // optional: defaults to 'word'
-        // }),
+        experimental_transform: smoothStream({
+            delayInMs: 50, // optional: defaults to 10ms
+            chunking: 'word', // optional: defaults to 'word'
+        }),
     });
 
-    return result.toDataStreamResponse();
+    return result.toUIMessageStreamResponse({
+        messageMetadata: ({ part }) => {
+            // Send metadata when streaming starts
+            if (part.type === 'start') {
+                return {
+                    createdAt: Date.now(),
+                    model,
+                };
+            }
+
+            // Send additional metadata when streaming completes
+            if (part.type === 'finish') {
+                return {
+                    totalTokens: part.totalUsage.totalTokens,
+                };
+            }
+        },
+    });
 }

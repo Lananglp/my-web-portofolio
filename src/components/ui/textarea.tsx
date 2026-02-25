@@ -8,7 +8,7 @@ const textareaVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-zinc-200 dark:bg-zinc-900 rounded-lg",
+        default: "bg-white dark:bg-neutral-900 rounded-lg",
         secondary: "bg-secondary text-secondary-foreground border-secondary",
         destructive: "border-destructive text-destructive-foreground focus-visible:ring-destructive",
         ghost: "border-transparent focus-visible:ring-ring",
